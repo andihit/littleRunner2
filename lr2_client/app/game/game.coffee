@@ -46,7 +46,7 @@ module.exports = class Game
       done()
   
   loop: (frame) =>
-    @world.loop frame
+    @world.loop frame, @
     @tux.loop frame, @pressedKeys
     
   start: ->
@@ -59,3 +59,6 @@ module.exports = class Game
     ], =>
       @stage.onFrame @loop
       @stage.start()
+      
+  stop: ->
+    @stage.stop()

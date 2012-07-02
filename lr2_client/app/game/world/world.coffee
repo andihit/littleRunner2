@@ -20,7 +20,7 @@ module.exports = class World
   applyReversedViewport: (ctx) ->
     ctx.translate @viewport.x, @viewport.y
 
-  loop: (frame) ->
+  loop: (frame, game) ->
     go.loop frame for go in @movingObjects
     
     # tux side scrolling
@@ -33,6 +33,11 @@ module.exports = class World
     if left < 0
       @viewport.x += left
       @layer.draw()
+      
+    # tux gone?
+    if @tux.getTop() - @viewport.height > 100
+      game.stop()
+      alert 'Tux is gone.'
 
   isHit: (x, y, width, height, exclude) ->
     top = y
@@ -49,10 +54,10 @@ module.exports = class World
     collectionHitCheck = (collection) ->
       for shape in collection
         if shape != exclude and intersect(shape)
-          return true
-      false
+          return shape
+      null
     
-    return true if collectionHitCheck @stickyObjects
-    return true if collectionHitCheck @movingObjects
-    return true if collectionHitCheck [@tux]
-    false
+    return x if x = collectionHitCheck @stickyObjects
+    return x if x = collectionHitCheck @movingObjects
+    return x if x = collectionHitCheck [@tux]
+    null
