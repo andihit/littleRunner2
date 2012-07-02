@@ -4,6 +4,9 @@ module.exports = class GameObject
   width: 0
   height: 0
   
+  constructor: (@world) ->
+    
+    
   getNode: ->
     @shape or @group
   
@@ -18,6 +21,12 @@ module.exports = class GameObject
     
   getBottom: ->
     @getNode().getY() + @height
+    
+  getWidth: ->
+    @width
+    
+  getHeight: ->
+    @height
     
   getBB: ->
     {

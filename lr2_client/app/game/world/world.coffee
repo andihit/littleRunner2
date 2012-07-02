@@ -1,18 +1,14 @@
-StickyObject = require './sticky/sticky_object'
-MovingObject = require './moving/moving_object'
 Viewport = require './viewport'
 
 module.exports = class World
   
-  constructor: (width, height, done) ->
+  constructor: (width, height) ->
     @layer = new Kinetic.Layer id: 'world'
     @viewport = new Viewport width, height
     
     @movingObjects = []
     @stickyObjects = []
     @tux = null
-    
-    @load done
   
   changeViewport: (x, y) ->
     @viewport.x = x
@@ -27,6 +23,7 @@ module.exports = class World
   loop: (frame) ->
     go.loop frame for go in @movingObjects
     
+    # tux side scrolling
     right = (@tux.getRight() + 100) - (@viewport.x + @viewport.width)
     if right > 0
       @viewport.x += right
@@ -36,34 +33,26 @@ module.exports = class World
     if left < 0
       @viewport.x += left
       @layer.draw()
-      
-  level1: ->
-    Floor = require './sticky/floor'
+
+  isHit: (x, y, width, height, exclude) ->
+    top = y
+    left = x
+    bottom = top + height
+    right = left + width
     
-    [
-      [Floor, 0, 400, 20]
-      [Floor, 0, 300, 2]
-      [Floor, 400, 300, 3]
-      [Floor, 500, 200, 3]
-    ]
-    
-  load: (done) ->
-    level = @level1()
-    
-    callableElements = level.map (gameObjectDef) ->
-      [Class, params...] = gameObjectDef
-      (done) ->
-        go = new Class()
-        
-        params.push done
-        go.init.apply go, params
-        
-    async.parallel callableElements, (err, gameObjects) =>
-      for go in gameObjects
-        if go instanceof StickyObject
-          @stickyObjects.push go
-        else if go instanceof MovingObject
-          @movingObjects.push go
+    intersect = (go) ->
+      go.getLeft() <= right &&
+      go.getTop() <= bottom &&
+      left <= go.getRight() &&
+      top <= go.getBottom()
           
-        @layer.add go.getNode()
-      done()
+    collectionHitCheck = (collection) ->
+      for shape in collection
+        if shape != exclude and intersect(shape)
+          return true
+      false
+    
+    return true if collectionHitCheck @stickyObjects
+    return true if collectionHitCheck @movingObjects
+    return true if collectionHitCheck [@tux]
+    false

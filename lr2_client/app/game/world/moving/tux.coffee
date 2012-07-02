@@ -3,7 +3,7 @@ utils = require 'game/utils'
 
 module.exports = class Tux extends PhysicsObject
   
-  constructor: (@stage, done) ->
+  constructor: (@world, done) ->
     @load done
   
   load: (done) ->
@@ -51,15 +51,8 @@ module.exports = class Tux extends PhysicsObject
         @isJumping = false
       
   falling: (frame) ->
-    pointLeftTux =
-      x: @getLeft()
-      y: @getBottom() + 1
-      
-    pointRightTux =
-      x: @getRight()
-      y: @getBottom() + 1
+    isFalling = not @world.isHit @getLeft(), @getTop() + 1, @getWidth(), @getHeight(), @
 
-    isFalling = not @isHit(pointLeftTux, pointRightTux)
     if isFalling
       @moveY 0.7 * frame.timeDiff
     

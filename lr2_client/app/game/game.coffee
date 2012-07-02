@@ -1,4 +1,5 @@
 World = require './world/world'
+WorldManager = require './world/world_manager'
 Tux = require './world/moving/tux'
 
 module.exports = class Game
@@ -22,15 +23,17 @@ module.exports = class Game
       height:    @container.height()
 
   initWorld: (done) =>
-    @world = new World @stage.getWidth(), @stage.getHeight(), =>
-      @world.layer.beforeDraw @world.applyViewport.bind         @world, @world.layer.getContext()
-      @world.layer.afterDraw  @world.applyReversedViewport.bind @world, @world.layer.getContext()
+    @world = new World @stage.getWidth(), @stage.getHeight()
+    @world.layer.beforeDraw @world.applyViewport.bind         @world, @world.layer.getContext()
+    @world.layer.afterDraw  @world.applyReversedViewport.bind @world, @world.layer.getContext()
       
+    worldManager = new WorldManager @world
+    worldManager.load WorldManager.level1(), =>
       @stage.add @world.layer
       done()
     
   initTux: (done) =>
-    @tux = new Tux @stage, =>
+    @tux = new Tux @world, =>
       layer = new Kinetic.Layer id: 'tuxLayer'
       layer.beforeDraw @world.applyViewport.bind         @world, layer.getContext()
       layer.afterDraw  @world.applyReversedViewport.bind @world, layer.getContext()

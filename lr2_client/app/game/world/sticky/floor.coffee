@@ -3,15 +3,20 @@ utils = require 'game/utils'
 
 module.exports = class Floor extends StickyObject
   
-  constructor: ->
+  constructor: (@world) ->
     super
     @group = new Kinetic.Group()
     
   init: (x, y, count, done) ->
+    @group.setX x
+    @group.setY y
+    @width = (count+2) * 62
+    @height = 64
+    
     utils.loadImage 'images/floor.png', (img) =>
       for i in [0 .. count+1]
         spriteIndex = if i == 0 then 0 else (if i + 1 == count+2 then 2 else 1)
-        @createImage img, x + i * 62, y, spriteIndex
+        @createImage img, i * 62, 0, spriteIndex
       done null, @
 
   createImage: (img, x, y, spriteIndex) ->
