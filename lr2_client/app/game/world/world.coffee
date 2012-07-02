@@ -21,25 +21,31 @@ module.exports = class World
   applyReversedViewport: (ctx) ->
     ctx.translate @viewport.x, @viewport.y
 
-  add: (go) ->
+  getCollection: (go) ->
     if go instanceof StickyObject
-      @stickyObjects.add go
+      @stickyObjects
     else if go instanceof MovingObject
-      @movingObjects.add go
+      @movingObjects
+      
+  add: (go) ->
+    @getCollection(go).add go
+      
+  remove: (go) ->
+    @getCollection(go).remove go
         
   loop: (frame, game) ->
-    go.loop frame for go in @movingObjects.getChildren()
+    go?.loop frame for go in @movingObjects.getChildren()
     
     # tux side scrolling
     right = (@tux.getRight() + 100) - (@viewport.x + @viewport.width)
     if right > 0
       @viewport.x += right
-      #@layer.draw()
+      layer.draw() for layer in [@stickyObjects, @movingObjects]
     
     left = (@tux.getLeft() - 100) - (@viewport.x)
     if left < 0
       @viewport.x += left
-      #@layer.draw()
+      layer.draw() for layer in [@stickyObjects, @movingObjects]
       
     # tux gone?
     if @tux.getTop() - @viewport.height > 100

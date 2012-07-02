@@ -1,5 +1,5 @@
 PhysicsObject = require './physics_object'
-Fire = require './fire'
+Fireball = require './fireball'
 utils = require 'game/utils'
 
 module.exports = class Tux extends PhysicsObject
@@ -23,6 +23,7 @@ module.exports = class Tux extends PhysicsObject
       
       @width = 46
       @height = 66
+      @_direction 'right'
       
       done()
   
@@ -38,7 +39,7 @@ module.exports = class Tux extends PhysicsObject
       else
         @jumpingDistance += moveHeight
         
-      unless @moveY -moveHeight
+      if @moveY(-moveHeight) isnt null
         @jumpingToTop = false
         @jumpingDistance = 0
     else
@@ -48,7 +49,7 @@ module.exports = class Tux extends PhysicsObject
       else
         @jumpingDistance += moveHeight
         
-      unless @moveY moveHeight
+      if @moveY(moveHeight) isnt null
         @isJumping = false
       
   falling: (frame) ->
@@ -60,12 +61,17 @@ module.exports = class Tux extends PhysicsObject
       
     isFalling
   
-  throwFire: ->
-    fire = new Fire @world
-    fire.init 50, 50, =>
-      @world.add fire
-      console.log @world.layer
+  throwFireball: ->
+    return if new Date().getTime() - @lastFire < 500
     
+    @lastFire = new Date().getTime()
+    x = if @direction == 'right' then @getRight() + 20 else @getLeft() - 20
+    y = @getTop() + 20
+    
+    fireball = new Fireball @world, {x, y, @direction}, =>
+      @world.add fireball
+      fireball.drawLayer()
+  
   _direction: (newDirection) ->
     return if @direction == newDirection
     @direction = newDirection
@@ -93,7 +99,7 @@ module.exports = class Tux extends PhysicsObject
       @_direction 'right'
       
     if keys[32] # Space
-      @throwFire()
+      @throwFireball()
     
     isFalling = @falling(frame)
     

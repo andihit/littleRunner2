@@ -1,34 +1,19 @@
 
 module.exports = class GameObject
-  
   width: 0
   height: 0
   
   constructor: (@world) ->
   
-  getLeft: ->
-    @getX()
-    
-  getRight: ->
-    @getX() + @width
-
-  getTop: ->
-    @getY()
-    
-  getBottom: ->
-    @getY() + @height
-    
-  getWidth: ->
-    @width
-    
-  getHeight: ->
-    @height
-    
-  setWidth: (width) ->
-    @width = width
-    
-  setHeight: (height) ->
-    @height = height
+  getLeft:   -> @getX()
+  getRight:  -> @getX() + @width
+  getTop:    -> @getY()
+  getBottom: -> @getY() + @height
+  getWidth:  -> @width
+  getHeight: -> @height
+  
+  setWidth: (width) -> @width = width
+  setHeight: (height) -> @height = height
     
   getBB: ->
     {
@@ -37,3 +22,9 @@ module.exports = class GameObject
       width: @width
       height: @height
     }
+
+  drawLayer: ->
+    @getLayer().draw()
+    
+  crashed: (who) ->
+    
