@@ -42,14 +42,16 @@ module.exports = class Fireball extends PhysicsObject
       @stage++
       @distance = 0
       
-    if (hitObj = @moveX mx) isnt null or (hitObj = @moveY my) isnt null
-      if hitObj instanceof StickyObject and @stage % 2 != 0 and @stage < 7
-        @flyVector[1] = -VELOCTIY
-        @stage++
-        @distance = 0
-      else
-        hitObj.crashed @
-        @world.remove @
-        @drawLayer()
+    @moveX mx
+    @moveY my
+       
+  crashed: (who) ->
+    if who instanceof StickyObject and @stage % 2 != 0 and @stage < 7
+      @flyVector[1] = -VELOCTIY
+      @stage++
+      @distance = 0
+    else
+      @world.remove @
+      @drawLayer()
     
 Kinetic.GlobalObject.extend Fireball, Kinetic.Image

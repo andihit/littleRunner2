@@ -4,7 +4,7 @@ Viewport = require './viewport'
 
 module.exports = class World
   
-  constructor: (width, height) ->
+  constructor: (@game, width, height) ->
     @movingObjects = new Kinetic.Layer
     @stickyObjects = new Kinetic.Layer
     @tux = null
@@ -33,7 +33,7 @@ module.exports = class World
   remove: (go) ->
     @getCollection(go).remove go
         
-  loop: (frame, game) ->
+  loop: (frame) ->
     go?.loop frame for go in @movingObjects.getChildren()
     
     # tux side scrolling
@@ -49,7 +49,7 @@ module.exports = class World
       
     # tux gone?
     if @tux.getTop() - @viewport.height > 100
-      game.stop()
+      @game.stop()
       alert 'Tux is gone.'
 
   isHit: (x, y, width, height, exclude) ->

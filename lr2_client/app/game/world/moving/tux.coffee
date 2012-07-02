@@ -39,7 +39,7 @@ module.exports = class Tux extends PhysicsObject
       else
         @jumpingDistance += moveHeight
         
-      if @moveY(-moveHeight) isnt null
+      unless @moveY(-moveHeight)
         @jumpingToTop = false
         @jumpingDistance = 0
     else
@@ -49,7 +49,7 @@ module.exports = class Tux extends PhysicsObject
       else
         @jumpingDistance += moveHeight
         
-      if @moveY(moveHeight) isnt null
+      unless @moveY(moveHeight)
         @isJumping = false
       
   falling: (frame) ->
@@ -110,5 +110,11 @@ module.exports = class Tux extends PhysicsObject
     
     @jumping(frame) if @isJumping
     @_changeAnimations keys
+    
+  # events
+  crashed: (who) ->
+    if who instanceof Fireball
+      @world.game.stop()
+      alert 'Run into a fireball.'
 
 Kinetic.GlobalObject.extend Tux, Kinetic.Sprite

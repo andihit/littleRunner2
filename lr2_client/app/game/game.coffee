@@ -28,7 +28,7 @@ module.exports = class Game
     layer
     
   initWorld: (done) =>
-    @world = new World @stage.getWidth(), @stage.getHeight()
+    @world = new World @, @stage.getWidth(), @stage.getHeight()
      
     worldManager = new WorldManager @world
     worldManager.load WorldManager.level1(), =>
@@ -47,7 +47,7 @@ module.exports = class Game
       done()
   
   loop: (frame) =>
-    @world.loop frame, @
+    @world.loop frame
     @tux.loop frame, @pressedKeys
     
   start: ->
