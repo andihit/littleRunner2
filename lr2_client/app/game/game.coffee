@@ -18,30 +18,31 @@ module.exports = class Game
   
   initStage: ->
     @stage = new Kinetic.Stage
-      container: @container.attr('id'),
+      container: @container[0],
       width:     @container.width(),
       height:    @container.height()
 
+  applyViewport: (layer) ->
+    layer.beforeDraw @world.applyViewport.bind         @world, layer.getContext()
+    layer.afterDraw  @world.applyReversedViewport.bind @world, layer.getContext()
+    layer
+    
   initWorld: (done) =>
     @world = new World @stage.getWidth(), @stage.getHeight()
-    @world.layer.beforeDraw @world.applyViewport.bind         @world, @world.layer.getContext()
-    @world.layer.afterDraw  @world.applyReversedViewport.bind @world, @world.layer.getContext()
-      
+     
     worldManager = new WorldManager @world
     worldManager.load WorldManager.level1(), =>
-      @stage.add @world.layer
+      @stage.add @applyViewport layer for layer in [@world.stickyObjects, @world.movingObjects]
       done()
     
   initTux: (done) =>
     @tux = new Tux @world, =>
-      layer = new Kinetic.Layer id: 'tuxLayer'
-      layer.beforeDraw @world.applyViewport.bind         @world, layer.getContext()
-      layer.afterDraw  @world.applyReversedViewport.bind @world, layer.getContext()
+      layer = new Kinetic.Layer
+      layer.add @tux
       
-      layer.add @tux.shape
-      @stage.add layer
+      @stage.add @applyViewport layer
       
-      @tux.shape.start()
+      @tux.start()
       @world.tux = @tux
       done()
   

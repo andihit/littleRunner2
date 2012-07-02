@@ -1,6 +1,3 @@
-StickyObject = require './sticky/sticky_object'
-MovingObject = require './moving/moving_object'
-
 module.exports = class WorldManager
 
   constructor: (@world) ->
@@ -9,27 +6,18 @@ module.exports = class WorldManager
     Floor = require './sticky/floor'
     
     [
-      [Floor, 0, 400, 20]
-      [Floor, 0, 300, 2]
-      [Floor, 400, 300, 3]
-      [Floor, 500, 200, 3]
+      [Floor, {x: 0,   y: 400, count: 20}]
+      [Floor, {x: 0,   y: 300, count:  2}]
+      [Floor, {x: 400, y: 300, count:  3}]
+      [Floor, {x: 500, y: 200, count:  3}]
     ]
     
   load: (level, done) ->
     callableElements = level.map (gameObjectDef) ->
-      [Class, params...] = gameObjectDef
+      [Class, config] = gameObjectDef
       (done) ->
-        go = new Class @world
-        
-        params.push done
-        go.init.apply go, params
+        go = new Class @world, config, done
         
     async.parallel callableElements, (err, gameObjects) =>
-      for go in gameObjects
-        if go instanceof StickyObject
-          @world.stickyObjects.push go
-        else if go instanceof MovingObject
-          @world.movingObjects.push go
-          
-        @world.layer.add go.getNode()
+      @world.add(go) for go in gameObjects
       done()

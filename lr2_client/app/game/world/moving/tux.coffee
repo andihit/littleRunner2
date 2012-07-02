@@ -1,4 +1,5 @@
 PhysicsObject = require './physics_object'
+Fire = require './fire'
 utils = require 'game/utils'
 
 module.exports = class Tux extends PhysicsObject
@@ -8,7 +9,7 @@ module.exports = class Tux extends PhysicsObject
   
   load: (done) ->
     utils.loadImage 'images/tux.png', (img) =>
-      @shape = new Kinetic.Sprite
+      Kinetic.Sprite.call @,
         x: 80,
         y: 0,
         image: img,
@@ -51,24 +52,37 @@ module.exports = class Tux extends PhysicsObject
         @isJumping = false
       
   falling: (frame) ->
+    return false if @isJumping
+    
     isFalling = not @world.isHit @getLeft(), @getTop() + 1, @getWidth(), @getHeight(), @
-
     if isFalling
       @moveY 0.7 * frame.timeDiff
-    
+      
     isFalling
   
+  throwFire: ->
+    fire = new Fire @world
+    fire.init 50, 50, =>
+      @world.add fire
+      console.log @world.layer
+    
   _direction: (newDirection) ->
     return if @direction == newDirection
     @direction = newDirection
     
     if @direction == 'left'
-      @shape.setScale -1, 1
-      @shape.setOffset @width, 0
+      @setScale -1, 1
+      @setOffset @width, 0
     else
-      @shape.setScale 1, 1
-      @shape.setOffset 0, 0
-    
+      @setScale 1, 1
+      @setOffset 0, 0
+  
+  _changeAnimations: (keys) ->
+    if (keys[65] or keys[68]) and @getAnimation() is 'standing'
+      @setAnimation 'walking'
+    else if not (keys[65] or keys[68]) and @getAnimation() is 'walking'
+      @setAnimation 'standing'
+      
   loop: (frame, keys) ->
     if keys[65] # A
       @moveX -0.25 * frame.timeDiff
@@ -77,8 +91,11 @@ module.exports = class Tux extends PhysicsObject
     if keys[68] # D
       @moveX 0.25 * frame.timeDiff
       @_direction 'right'
+      
+    if keys[32] # Space
+      @throwFire()
     
-    isFalling = if @isJumping then false else @falling(frame)
+    isFalling = @falling(frame)
     
     if keys[87] and not @isJumping and not isFalling # W
       @isJumping = true
@@ -86,9 +103,6 @@ module.exports = class Tux extends PhysicsObject
       @jumpingToTop = true
     
     @jumping(frame) if @isJumping
+    @_changeAnimations keys
 
-    # change animations
-    if (keys[65] or keys[68]) and @shape.getAnimation() is 'standing'
-      @shape.setAnimation 'walking'
-    else if not (keys[65] or keys[68]) and @shape.getAnimation() is 'walking'
-      @shape.setAnimation 'standing'
+Kinetic.GlobalObject.extend Tux, Kinetic.Sprite

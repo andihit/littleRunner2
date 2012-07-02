@@ -3,6 +3,7 @@ MovingObject = require './moving_object'
 module.exports = class PhysicsObject extends MovingObject
     
   moveX: (diff) ->
+    diff = Math.round(diff)
     success = true
     
     isCrash = => @world.isHit @getLeft() + diff, @getTop(), @getWidth(), @getHeight(), @
@@ -11,11 +12,12 @@ module.exports = class PhysicsObject extends MovingObject
       diff += diffTest while isCrash()
       success = false
       
-    @shape.setX @getLeft() + diff
-    @shape.getLayer().draw()
+    @setX @getLeft() + diff
+    @getLayer().draw()
     success
     
   moveY: (diff) ->
+    diff = Math.round(diff)
     success = true
     
     isCrash = => @world.isHit @getLeft(), @getTop() + diff, @getWidth(), @getHeight(), @
@@ -24,6 +26,6 @@ module.exports = class PhysicsObject extends MovingObject
       diff += diffTest while isCrash()
       success = false
       
-    @shape.setY @getTop() + diff
-    @shape.getLayer().draw()
+    @setY @getTop() + diff
+    @getLayer().draw()
     success
