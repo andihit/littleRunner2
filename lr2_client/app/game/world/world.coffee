@@ -17,12 +17,6 @@ module.exports = class World
   changeViewport: (x, y) ->
     @viewport.x = x
     @viewport.y = y
-    
-  applyViewport: (ctx) ->
-    ctx.translate @viewport.x, @viewport.y
-    
-  applyReversedViewport: (ctx) ->
-    ctx.translate -@viewport.x, -@viewport.y
 
   getLayer: (go) ->
     if go instanceof StickyObject
@@ -36,7 +30,8 @@ module.exports = class World
   remove: (go) ->
     @getLayer(go).remove go
   
-  draw: ->
+  updateViewport: ->
+    @game.getStage().setOffset -@viewport.x, -@viewport.y
     @stickyObjects.draw()
     @movingObjects.draw()
     
@@ -46,21 +41,21 @@ module.exports = class World
     # tux side scrolling
     if @tux.getLeft() + @viewport.x < 100
       @viewport.x = 100 - @tux.getLeft()
-      @draw()
+      @updateViewport()
     
     if @tux.getRight() + @viewport.x > @viewport.width - 100
       @viewport.x = @viewport.width - 100 - @tux.getRight()
-      @draw()
+      @updateViewport()
       
     if @tux.getTop() + @viewport.y < 100 or @viewport.y > 0
       @viewport.y = 100 - @tux.getTop()
       @viewport.y = 0 if @tux.getTop() > 100
-      @draw()
+      @updateViewport()
       
     if @tux.getBottom() + @viewport.y > @viewport.height - 100 or @viewport.y < 0
       @viewport.y = @viewport.height - 100 - @tux.getBottom()
       @viewport.y = 0 if @viewport.height - @tux.getBottom() > 100
-      @draw()
+      @updateViewport()
       
     # tux gone?
     if @tux.getTop() - @viewport.height > 200

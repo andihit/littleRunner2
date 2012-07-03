@@ -16,11 +16,6 @@ module.exports = class Game
       
   getStage: ->
     @stage
-
-  applyViewport: (layer) ->
-    layer.beforeDraw @world.applyViewport.bind         @world, layer.getContext()
-    layer.afterDraw  @world.applyReversedViewport.bind @world, layer.getContext()
-    layer
     
   initKeyEvents: ->
     $(window).on 'keydown', Keys.keyDown
@@ -36,14 +31,14 @@ module.exports = class Game
   initWorld: (level) =>
     @world = new World @
     LevelManager.load @world, @getResource 'levels/level1.json'
-    @stage.add @applyViewport layer for layer in [@world.stickyObjects, @world.movingObjects]
+    @stage.add layer for layer in [@world.stickyObjects, @world.movingObjects]
     
   initTux: =>
     @tux = new Tux @world, {x: 100, y: 100}
     
     layer = new Kinetic.Layer
     layer.add @tux  
-    @stage.add @applyViewport layer
+    @stage.add layer
       
     @tux.start()
     @world.tux = @tux

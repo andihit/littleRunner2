@@ -26,7 +26,7 @@ module.exports = class Fireball extends MovingObject
   loop: (frame) ->
     mx = @flyVector[0] * frame.timeDiff
     my = @flyVector[1] * frame.timeDiff
-    @distance += mx
+    @distance += Math.abs mx
     
     # stage 0 = horiz
     # stage 1 = down

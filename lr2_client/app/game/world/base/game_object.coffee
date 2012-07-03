@@ -27,4 +27,3 @@ module.exports = class GameObject
     @getLayer().draw()
     
   crashed: (who) ->
-    
