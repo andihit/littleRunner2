@@ -1,6 +1,7 @@
 PhysicsObject = require './physics_object'
 Fireball = require './fireball'
 utils = require 'game/utils'
+Keys = require 'game/keys'
 
 module.exports = class Tux extends PhysicsObject
   
@@ -84,26 +85,28 @@ module.exports = class Tux extends PhysicsObject
       @setOffset 0, 0
   
   _changeAnimations: (keys) ->
-    if (keys[65] or keys[68]) and @getAnimation() is 'standing'
+    leftOrRight = Keys.isPressed('Left') or Keys.isPressed('Right')
+    
+    if leftOrRight and @getAnimation() is 'standing'
       @setAnimation 'walking'
-    else if not (keys[65] or keys[68]) and @getAnimation() is 'walking'
+    else if not leftOrRight and @getAnimation() is 'walking'
       @setAnimation 'standing'
       
   loop: (frame, keys) ->
-    if keys[65] # A
+    if Keys.isPressed 'Left'
       @moveX -0.25 * frame.timeDiff
       @_direction 'left'
       
-    if keys[68] # D
+    if Keys.isPressed 'Right'
       @moveX 0.25 * frame.timeDiff
       @_direction 'right'
       
-    if keys[32] # Space
+    if Keys.isPressed 'Shoot'
       @throwFireball()
     
     isFalling = @falling(frame)
     
-    if keys[87] and not @isJumping and not isFalling # W
+    if Keys.isPressed('Jump') and not @isJumping and not isFalling # W
       @isJumping = true
       @jumpingDistance = 0
       @jumpingToTop = true

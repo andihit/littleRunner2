@@ -1,20 +1,15 @@
 World = require './world/world'
 WorldManager = require './world/world_manager'
 Tux = require './world/moving/tux'
+Keys = require './keys'
 
 module.exports = class Game
   
   constructor: (@container) ->
     
   initKeyEvents: ->
-    @pressedKeys = {}
-  
-    $(window).on 'keydown', (e) =>
-      return if @pressedKeys[e.keyCode]
-      @pressedKeys[e.keyCode] = true
-      
-    $(window).on 'keyup', (e) =>
-      delete @pressedKeys[e.keyCode]
+    $(window).on 'keydown', Keys.keyDown
+    $(window).on 'keyup', Keys.keyUp
   
   initStage: ->
     @stage = new Kinetic.Stage
