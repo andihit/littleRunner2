@@ -6,8 +6,21 @@ module.exports = class NetworkManager
   constructor: (@world, @localKeys) ->
     @playerKeys = {}
     @localKeys.listener = @
+    
+    @initWebsocket 'ws://localhost:4444'
     # wait for movingObjectsPositions
 
+  initWebsocket: (host) ->
+    @ws = new WebSocket host
+    @ws.onmessage = @handleMessage
+    @ws.onclose = @connectionLost
+    
+  handleMessage: (msg) =>
+    console.log msg
+    
+  connectionLost: =>
+    @world.getGame().stop 'Connection lost, sorry.'
+    
   # local payer
   keyDown: (keyCode) ->
     

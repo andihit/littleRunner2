@@ -65,8 +65,8 @@ module.exports = class Game
       @stage.start()
       
       # TODO
-      @networkManager.addPlayer id: 'A', x: 200, y: 100
-      #_.delay -> @networkManager.
+      #@networkManager.addPlayer id: 'A', x: 500, y: 100
+      #_.delay (=> @networkManager.keyChange id: 'A', down: true, keyCode: 32), 5000
       
   stop: (message) ->
     @stage.stop()

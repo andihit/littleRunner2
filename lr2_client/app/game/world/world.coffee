@@ -16,10 +16,6 @@ module.exports = class World
   
   getGame: ->
     @game
-    
-  changeViewport: (x, y) ->
-    @viewport.x = x
-    @viewport.y = y
 
   getLayer: (go) ->
     if go instanceof StickyObject
@@ -34,7 +30,7 @@ module.exports = class World
     
   add: (go) ->
     @getLayer(go).add go
-      
+    
   remove: (go) ->
     @getLayer(go).remove go
   
