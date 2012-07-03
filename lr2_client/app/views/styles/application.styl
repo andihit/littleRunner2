@@ -1,10 +1,44 @@
 @import 'nib'
+@import url(http://fonts.googleapis.com/css?family=Salsa);
+
+*
+  margin: 0
+  padding: 0
+
+html, body
+  height: 100%
+  
+body
+  background-image: url(../images/dark_wood.png)
 
 #game-view
-  width: 900px
+  position: relative
+  width: 1024px
+  height: 100%
   margin: 0 auto
 
+h1
+  position: absolute
+  width: 100%
+  top: 50%
+  margin-top: -256px - 90px
+  
+  font-family: Salsa, cursive
+  font-size: 48px
+  font-weight: normal
+  text-align: center
+  letter-spacing: 2px
+  color: #fff
+  
 #game
-  width: 900px
-  height: 500px
-  border: 1px solid #000
+  position: absolute
+  top: 50%
+  left: 50%
+  
+  width: 1024px
+  height: 512px
+  
+  margin-left: -(@width / 2)
+  margin-top: -(@height / 2)
+  
+  background-color: #fff
