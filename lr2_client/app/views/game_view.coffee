@@ -11,5 +11,5 @@ module.exports = class GameView extends View
     @render()
     
   start: ->
-    @game = new Game
-    @game.start @$el.find '#game'
+    @game = new Game @$el.find '#game'
+    @game.start()

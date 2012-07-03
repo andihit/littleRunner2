@@ -1,4 +1,4 @@
-StickyImageObject = require './sticky_image_object'
+StickyImageObject = require 'game/world/base/sticky_image_object'
 utils = require 'game/utils'
 
 module.exports = class Brick extends StickyImageObject

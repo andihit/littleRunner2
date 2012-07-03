@@ -1,11 +1,13 @@
-World = require './world/world'
-WorldManager = require './world/world_manager'
 Resources = require './resources'
-Tux = require './world/moving/tux'
+World = require './world/world'
+LevelManager = require './level_manager'
+Tux = require('./world/objects').Tux
 Keys = require './keys'
 
 module.exports = class Game
   
+  constructor: (@container) ->
+    
   initStage: (container) ->
     @stage = new Kinetic.Stage
       container: container[0],
@@ -33,10 +35,7 @@ module.exports = class Game
     
   initWorld: (level) =>
     @world = new World @
-     
-    worldManager = new WorldManager @world
-    worldManager.load level
-    
+    LevelManager.load @world, level
     @stage.add @applyViewport layer for layer in [@world.stickyObjects, @world.movingObjects]
     
   initTux: =>
@@ -53,8 +52,8 @@ module.exports = class Game
     @world.loop frame
     @tux.loop frame
     
-  start: (container) ->
-    @initStage container
+  start: ->
+    @initStage @container
     @initKeyEvents()
     
     @initResources =>

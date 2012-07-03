@@ -1,5 +1,5 @@
-StickyObject = require './sticky/sticky_object'
-MovingObject = require './moving/moving_object'
+StickyObject = require './base/sticky_object'
+MovingObject = require './base/moving_object'
 Viewport = require './viewport'
 
 module.exports = class World
@@ -24,17 +24,17 @@ module.exports = class World
   applyReversedViewport: (ctx) ->
     ctx.translate -@viewport.x, -@viewport.y
 
-  getCollection: (go) ->
+  getLayer: (go) ->
     if go instanceof StickyObject
       @stickyObjects
     else if go instanceof MovingObject
       @movingObjects
       
   add: (go) ->
-    @getCollection(go).add go
+    @getLayer(go).add go
       
   remove: (go) ->
-    @getCollection(go).remove go
+    @getLayer(go).remove go
   
   draw: ->
     @stickyObjects.draw()

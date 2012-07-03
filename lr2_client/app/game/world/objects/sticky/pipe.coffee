@@ -1,4 +1,4 @@
-StickyObject = require './sticky_object'
+StickyObject = require 'game/world/base/sticky_object'
 utils = require 'game/utils'
 
 module.exports = class Pipe extends StickyObject

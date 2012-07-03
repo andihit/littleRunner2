@@ -1,5 +1,5 @@
-MovingObject = require './moving_object'
-StickyObject = require '../sticky/sticky_object'
+MovingObject = require 'game/world/base/moving_object'
+StickyObject = require 'game/world/base/sticky_object'
 
 VELOCTIY = 0.4
 

@@ -1,4 +1,4 @@
-StickyImageObject = require './sticky_image_object'
+StickyImageObject = require 'game/world/base/sticky_image_object'
 
 SPRITE =
   x: 0

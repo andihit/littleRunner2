@@ -1,4 +1,4 @@
-PhysicsObject = require './physics_object'
+PhysicsObject = require 'game/world/base/physics_object'
 Fireball = require './fireball'
 utils = require 'game/utils'
 Keys = require 'game/keys'
