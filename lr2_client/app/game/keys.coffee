@@ -5,7 +5,7 @@ KEYMAP =
   Shoot: [32]
   FastRun: [17]
 
-class Keys
+module.exports = class Keys
   pressedKeys: {}
   listener: null
   
@@ -34,5 +34,3 @@ class Keys
       if pressedKey in keys
         return true
     false
-
-module.exports = new Keys()

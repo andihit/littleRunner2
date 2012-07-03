@@ -2,7 +2,7 @@ Resources = require './resources'
 World = require './world/world'
 LevelManager = require './level_manager'
 NetworkManager = require './network_manager'
-Tux = require('./world/objects').Tux
+Tux = require './world/objects/moving/tux'
 Keys = require './keys'
 
 module.exports = class Game
@@ -19,8 +19,9 @@ module.exports = class Game
     @stage
     
   initKeyEvents: ->
-    $(window).on 'keydown', Keys.keyDown
-    $(window).on 'keyup', Keys.keyUp
+    @keys = new Keys
+    $(window).on 'keydown', @keys.keyDown
+    $(window).on 'keyup', @keys.keyUp
     
   initResources: (done) ->
     @resources = new Resources
@@ -32,20 +33,17 @@ module.exports = class Game
   initWorld: (level) =>
     @world = new World @
     LevelManager.load @world, @getResource 'levels/level1.json'
-    @stage.add layer for layer in [@world.stickyObjects, @world.movingObjects]
+    @stage.add layer for layer in [@world.stickyObjects, @world.movingObjects, @world.playerObjects]
   
   initNetworkManager: ->
     @networkManager = new NetworkManager @world
     
   initTux: =>
-    @tux = new Tux @world, {x: 100, y: 100}
-    
-    layer = new Kinetic.Layer
-    layer.add @tux  
-    @stage.add layer
-      
-    @tux.start()
+    @tux = new Tux @world, {x: 100, y: 100}, @keys
+    @world.add @tux
     @world.tux = @tux
+    
+    @tux.start()
   
   start: ->
     @initStage @container

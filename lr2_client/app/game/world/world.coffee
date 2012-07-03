@@ -1,5 +1,6 @@
 StickyObject = require './base/sticky_object'
 MovingObject = require './base/moving_object'
+Tux = require './objects/moving/tux'
 Viewport = require './viewport'
 Keys = require 'game/keys'
 
@@ -8,6 +9,7 @@ module.exports = class World
   constructor: (@game) ->
     @movingObjects = new Kinetic.Layer
     @stickyObjects = new Kinetic.Layer
+    @playerObjects = new Kinetic.Layer
     @tux = null
     
     @viewport = new Viewport @game.getStage().getWidth(), @game.getStage().getHeight()
@@ -22,6 +24,8 @@ module.exports = class World
   getLayer: (go) ->
     if go instanceof StickyObject
       @stickyObjects
+    else if go instanceof Tux
+      @playerObjects
     else if go instanceof MovingObject
       @movingObjects
       
@@ -61,8 +65,8 @@ module.exports = class World
       @game.stop 'Tux is gone.'
       
   loop: (frame) =>
-    @tux.loop frame, Keys
-    go?.loop frame for go in @movingObjects.getChildren()
+    player?.loop frame       for player       in @playerObjects.getChildren()
+    movingObject?.loop frame for movingObject in @movingObjects.getChildren()
     
     @sideScrolling()
     @gameEnded()

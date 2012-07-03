@@ -1,9 +1,8 @@
-Keys = require './keys'
 
 module.exports = class NetworkManager
   
   constructor: (@world) ->
-    Keys.listener = @
+    #Keys.listener = @
 
   # local payer
   keyDown: (keyCode) ->
@@ -16,8 +15,9 @@ module.exports = class NetworkManager
   # remove messages
   movingObjectsPositions: (positions) ->
     for position in positions
-      alert 'x'
-    console.log 'for movingDingls'
+      go = @world.movingObjects.get('#' + position.id)
+      go.setX position.x
+      go.setY position.y
     
   dispose: ->
     Keys.listener = null
