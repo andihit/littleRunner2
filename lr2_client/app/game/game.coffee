@@ -1,6 +1,7 @@
 Resources = require './resources'
 World = require './world/world'
 LevelManager = require './level_manager'
+NetworkManager = require './network_manager'
 Tux = require('./world/objects').Tux
 Keys = require './keys'
 
@@ -32,6 +33,9 @@ module.exports = class Game
     @world = new World @
     LevelManager.load @world, @getResource 'levels/level1.json'
     @stage.add layer for layer in [@world.stickyObjects, @world.movingObjects]
+  
+  initNetworkManager: ->
+    @networkManager = new NetworkManager @world
     
   initTux: =>
     @tux = new Tux @world, {x: 100, y: 100}
@@ -43,22 +47,20 @@ module.exports = class Game
     @tux.start()
     @world.tux = @tux
   
-  loop: (frame) =>
-    @world.loop frame
-    @tux.loop frame
-    
   start: ->
     @initStage @container
     @initKeyEvents()
     
     @initResources =>
       @initWorld 'level1.json'
+      @initNetworkManager()
       @initTux()
     
-      @stage.onFrame @loop
+      @stage.onFrame @world.loop
       @stage.start()
-    
+      
   stop: (message) ->
     @stage.stop()
     @stage.reset()
+    @networkManager.dispose()
     alert message

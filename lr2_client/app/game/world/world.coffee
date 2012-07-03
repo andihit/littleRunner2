@@ -1,6 +1,7 @@
 StickyObject = require './base/sticky_object'
 MovingObject = require './base/moving_object'
 Viewport = require './viewport'
+Keys = require 'game/keys'
 
 module.exports = class World
   
@@ -34,10 +35,8 @@ module.exports = class World
     @game.getStage().setOffset -@viewport.x, -@viewport.y
     @stickyObjects.draw()
     @movingObjects.draw()
-    
-  loop: (frame) ->
-    go?.loop frame for go in @movingObjects.getChildren()
-    
+  
+  sideScrolling: ->
     # tux side scrolling
     if @tux.getLeft() + @viewport.x < 100
       @viewport.x = 100 - @tux.getLeft()
@@ -56,10 +55,17 @@ module.exports = class World
       @viewport.y = @viewport.height - 100 - @tux.getBottom()
       @viewport.y = 0 if @viewport.height - @tux.getBottom() > 100
       @updateViewport()
-      
-    # tux gone?
+  
+  gameEnded: ->
     if @tux.getTop() - @viewport.height > 200
       @game.stop 'Tux is gone.'
+      
+  loop: (frame) =>
+    @tux.loop frame, Keys
+    go?.loop frame for go in @movingObjects.getChildren()
+    
+    @sideScrolling()
+    @gameEnded()
 
   isHit: (x, y, width, height, exclude) ->
     top = y

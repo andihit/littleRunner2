@@ -7,15 +7,21 @@ KEYMAP =
 
 class Keys
   pressedKeys: {}
+  listener: null
   
   keyDown: (e) =>
     return unless @isSupported e.keyCode
     
     e.preventDefault()
-    @pressedKeys[e.keyCode] = true unless @pressedKeys[e.keyCode]
+    unless @pressedKeys[e.keyCode]
+      @pressedKeys[e.keyCode] = true
+      @listener?.keyDown e.keyCode
     
   keyUp: (e) =>
+    return unless @pressedKeys[e.keyCode]
+    
     delete @pressedKeys[e.keyCode]
+    @listener?.keyUp e.keyCode
     
   isPressed: (action) ->
     for key in KEYMAP[action]
