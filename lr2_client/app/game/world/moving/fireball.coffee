@@ -16,7 +16,7 @@ module.exports = class Fireball extends PhysicsObject
     @load done
     
   load: (done) ->
-    utils.loadImage 'images/fireball.png', (img) =>
+    utils.loadImage 'images/game/fireball.png', (img) =>
       @setWidth img.width
       @setHeight img.height
       

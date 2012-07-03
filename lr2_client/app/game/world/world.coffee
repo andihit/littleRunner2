@@ -66,7 +66,7 @@ module.exports = class World
           
     collectionHitCheck = (collection) ->
       for shape in collection
-        if shape != exclude and intersect(shape)
+        if shape != exclude and intersect(shape) and not shape.decoration
           return shape
       null
     

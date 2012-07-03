@@ -36,7 +36,7 @@ module.exports = class Game
       done()
     
   initTux: (done) =>
-    @tux = new Tux @world, =>
+    @tux = new Tux @world, 100, =>
       layer = new Kinetic.Layer
       layer.add @tux
       

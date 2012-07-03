@@ -4,13 +4,13 @@ utils = require 'game/utils'
 
 module.exports = class Tux extends PhysicsObject
   
-  constructor: (@world, done) ->
-    @load done
+  constructor: (@world, x, done) ->
+    @load x, done
   
-  load: (done) ->
-    utils.loadImage 'images/tux.png', (img) =>
+  load: (x, done) ->
+    utils.loadImage 'images/game/tux.png', (img) =>
       Kinetic.Sprite.call @,
-        x: 80,
+        x: x,
         y: 0,
         image: img,
         animation: 'standing',

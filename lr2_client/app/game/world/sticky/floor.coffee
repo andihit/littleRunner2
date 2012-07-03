@@ -9,34 +9,39 @@ module.exports = class Floor extends StickyObject
       x: @config.x
       y: @config.y
     
-    @setWidth (@config.count + 2) * 62
-    @setHeight 64
+    @setWidth (@config.count + 2) * (SPRITES[0].width - 2)
+    @setHeight SPRITES[0].height
     @load done
   
   load: (done) ->
-    utils.loadImage 'images/floor.png', (img) =>
+    utils.loadImage 'images/game/floor.png', (img) =>
       for i in [0 .. @config.count + 1]
         if i == 0
-          spriteIndex = 0
+          sprite = 'left'
         else if i + 1 == @config.count + 2
-          spriteIndex = 2
+          sprite = 'right'
         else
-          spriteIndex = 1
+          sprite = 'middle'
           
-        @add @createImage img, i * 62, 0, spriteIndex
+        @add @createImage img, i * (SPRITES[0].width - 2), 0, sprite
       done null, @
 
-  createImage: (img, x, y, spriteIndex) ->
+  createImage: (img, x, y, sprite) ->
+    sprite = NAMED_SPRITES[sprite]
+    
     image = new Kinetic.Image
       x: x,
       y: y,
       image: img,
-      width: 64,
-      height: 64,
-      crop:
-        width: 64
-        height: 64
-        x: 64 * spriteIndex
-        y: 0
+      width: sprite.width,
+      height: sprite.height,
+      crop: sprite
 
 Kinetic.GlobalObject.extend Floor, Kinetic.Group
+
+
+SPRITES = utils.getSpriteSheet 64, 64, 0, 2
+NAMED_SPRITES =
+  left: SPRITES[0]
+  middle: SPRITES[1]
+  right: SPRITES[2]

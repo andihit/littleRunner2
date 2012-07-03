@@ -2,6 +2,7 @@
 module.exports = class GameObject
   width: 0
   height: 0
+  decoration: false
   
   constructor: (@world) ->
   
