@@ -1,10 +1,10 @@
-PhysicsObject = require './physics_object'
+MovingObject = require './moving_object'
 StickyObject = require '../sticky/sticky_object'
 utils = require 'game/utils'
 
 VELOCTIY = 0.4
 
-module.exports = class Fireball extends PhysicsObject
+module.exports = class Fireball extends MovingObject
   
   constructor: (@world, @config, done) ->
     super
