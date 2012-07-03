@@ -6,22 +6,22 @@ KEYMAP =
   FastRun: [17]
 
 module.exports = class Keys
-  pressedKeys: {}
-  listener: null
   
-  keyDown: (e) =>
-    return unless @isSupported e.keyCode
+  constructor: ->
+    @pressedKeys = {}
+    @listener = null
     
-    e.preventDefault()
-    unless @pressedKeys[e.keyCode]
-      @pressedKeys[e.keyCode] = true
-      @listener?.keyDown e.keyCode
+  keyDown: (keyCode) =>
+    return if @pressedKeys[keyCode]
     
-  keyUp: (e) =>
-    return unless @pressedKeys[e.keyCode]
+    @pressedKeys[keyCode] = true
+    @listener?.keyDown keyCode
     
-    delete @pressedKeys[e.keyCode]
-    @listener?.keyUp e.keyCode
+  keyUp: (keyCode) =>
+    return unless @pressedKeys[keyCode]
+    
+    delete @pressedKeys[keyCode]
+    @listener?.keyUp keyCode
     
   isPressed: (action) ->
     for key in KEYMAP[action]
@@ -29,7 +29,7 @@ module.exports = class Keys
         return true
     false
 
-  isSupported: (pressedKey) ->
+  @isSupported: (pressedKey) ->
     for action, keys of KEYMAP
       if pressedKey in keys
         return true

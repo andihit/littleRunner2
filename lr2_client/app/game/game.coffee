@@ -20,8 +20,15 @@ module.exports = class Game
     
   initKeyEvents: ->
     @keys = new Keys
-    $(window).on 'keydown', @keys.keyDown
-    $(window).on 'keyup', @keys.keyUp
+    
+    $(window).on 'keydown', (e) =>
+      return unless Keys.isSupported e.keyCode
+      e.preventDefault()
+      
+      @keys.keyDown e.keyCode
+      
+    $(window).on 'keyup', (e) =>
+      @keys.keyUp e.keyCode
     
   initResources: (done) ->
     @resources = new Resources
@@ -36,7 +43,7 @@ module.exports = class Game
     @stage.add layer for layer in [@world.stickyObjects, @world.movingObjects, @world.playerObjects]
   
   initNetworkManager: ->
-    @networkManager = new NetworkManager @world
+    @networkManager = new NetworkManager @world, @keys
     
   initTux: =>
     @tux = new Tux @world, {x: 100, y: 100}, @keys
@@ -56,6 +63,10 @@ module.exports = class Game
     
       @stage.onFrame @world.loop
       @stage.start()
+      
+      # TODO
+      @networkManager.addPlayer id: 'A', x: 200, y: 100
+      #_.delay -> @networkManager.
       
   stop: (message) ->
     @stage.stop()

@@ -12,7 +12,8 @@ FILES = [
 
 
 module.exports = class Resources
-  cache: {}
+  constructor: ->
+    @cache = {}
   
   loadImage: (src, done) ->
     img = new Image()
