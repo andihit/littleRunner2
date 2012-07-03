@@ -28,7 +28,10 @@ module.exports = class World
       @playerObjects
     else if go instanceof MovingObject
       @movingObjects
-      
+  
+  getAllLayers: ->
+    [@stickyObjects, @movingObjects, @playerObjects]
+    
   add: (go) ->
     @getLayer(go).add go
       
@@ -37,8 +40,7 @@ module.exports = class World
   
   updateViewport: ->
     @game.getStage().setOffset -@viewport.x, -@viewport.y
-    @stickyObjects.draw()
-    @movingObjects.draw()
+    layer.draw() for layer in @getAllLayers()
   
   sideScrolling: ->
     # tux side scrolling
@@ -89,7 +91,8 @@ module.exports = class World
           return shape
       null
     
-    return x if x = collectionHitCheck @stickyObjects.getChildren()
-    return x if x = collectionHitCheck @movingObjects.getChildren()
-    return x if x = collectionHitCheck [@tux]
+    for layer in @getAllLayers()
+      if x = collectionHitCheck layer.getChildren()
+        return x
+        
     null
