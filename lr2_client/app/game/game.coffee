@@ -43,7 +43,7 @@ module.exports = class Game
   
   loop: (frame) =>
     @world.loop frame
-    @tux.loop frame, @pressedKeys
+    @tux.loop frame
     
   start: ->
     @initStage()

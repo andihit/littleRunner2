@@ -2,34 +2,14 @@ MovingObject = require './moving_object'
 
 module.exports = class PhysicsObject extends MovingObject
     
-  moveX: (diff) ->
-    diff = Math.round(diff)
-    success = true
+  falling: (frame) ->
+    return false if @isJumping
     
-    isCrash = => @world.isHit @getLeft() + diff, @getTop(), @getWidth(), @getHeight(), @
-    if hitObject = isCrash()
-      @.crashed hitObject
-      hitObject.crashed @
-      diffTest = if diff > 0 then -1 else 1
-      diff += diffTest while isCrash()
-      success = false
+    isFalling = not @world.isHit @getLeft(), @getTop() + 1, @getWidth(), @getHeight(), @
+    if isFalling
+      @moveY 0.7 * frame.timeDiff
       
-    @setX @getLeft() + diff
-    @getLayer().draw()
-    success
-    
-  moveY: (diff) ->
-    diff = Math.round(diff)
-    success = true
-    
-    isCrash = => @world.isHit @getLeft(), @getTop() + diff, @getWidth(), @getHeight(), @
-    if hitObject = isCrash()
-      @.crashed hitObject
-      hitObject.crashed @
-      diffTest = if diff > 0 then -1 else 1
-      diff += diffTest while isCrash()
-      success = false
-      
-    @setY @getTop() + diff
-    @getLayer().draw()
-    success
+    isFalling
+
+  loop: (frame) ->
+    @isFalling = @falling(frame)

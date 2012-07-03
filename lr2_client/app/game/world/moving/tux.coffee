@@ -52,15 +52,6 @@ module.exports = class Tux extends PhysicsObject
         
       unless @moveY(moveHeight)
         @isJumping = false
-      
-  falling: (frame) ->
-    return false if @isJumping
-    
-    isFalling = not @world.isHit @getLeft(), @getTop() + 1, @getWidth(), @getHeight(), @
-    if isFalling
-      @moveY 0.7 * frame.timeDiff
-      
-    isFalling
   
   throwFireball: ->
     return if new Date().getTime() - @lastFire < 500
@@ -84,7 +75,7 @@ module.exports = class Tux extends PhysicsObject
       @setScale 1, 1
       @setOffset 0, 0
   
-  _changeAnimations: (keys) ->
+  _changeAnimations: ->
     leftOrRight = Keys.isPressed('Left') or Keys.isPressed('Right')
     
     if leftOrRight and @getAnimation() is 'standing'
@@ -92,7 +83,9 @@ module.exports = class Tux extends PhysicsObject
     else if not leftOrRight and @getAnimation() is 'walking'
       @setAnimation 'standing'
       
-  loop: (frame, keys) ->
+  loop: (frame) ->
+    super
+    
     if Keys.isPressed 'Left'
       @moveX -0.25 * frame.timeDiff
       @_direction 'left'
@@ -104,15 +97,13 @@ module.exports = class Tux extends PhysicsObject
     if Keys.isPressed 'Shoot'
       @throwFireball()
     
-    isFalling = @falling(frame)
-    
-    if Keys.isPressed('Jump') and not @isJumping and not isFalling # W
+    if Keys.isPressed('Jump') and not @isJumping and not @isFalling # W
       @isJumping = true
       @jumpingDistance = 0
       @jumpingToTop = true
     
     @jumping(frame) if @isJumping
-    @_changeAnimations keys
+    @_changeAnimations()
     
   # events
   crashed: (who) ->
