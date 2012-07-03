@@ -52,7 +52,8 @@ module.exports = class Tux extends PhysicsObject
     return if new Date().getTime() - @lastFire < 500
     
     @lastFire = new Date().getTime()
-    x = if @direction == 'right' then @getRight() + 20 else @getLeft() - 20
+    # when firing left, X = 20px away + fireball width
+    x = if @direction == 'right' then @getRight() + 20 else @getLeft() - 20 - 20
     y = @getTop() + 20
     
     fireball = new Fireball @world, {x, y, @direction}
@@ -80,13 +81,14 @@ module.exports = class Tux extends PhysicsObject
       
   loop: (frame) ->
     super
-    
+    moveDiff = -> if Keys.isPressed('FastRun') then 0.5 else 0.25
+      
     if Keys.isPressed 'Left'
-      @moveX -0.25 * frame.timeDiff
+      @moveX -moveDiff() * frame.timeDiff
       @_direction 'left'
       
     if Keys.isPressed 'Right'
-      @moveX 0.25 * frame.timeDiff
+      @moveX moveDiff() * frame.timeDiff
       @_direction 'right'
       
     if Keys.isPressed 'Shoot'
@@ -103,7 +105,6 @@ module.exports = class Tux extends PhysicsObject
   # events
   crashed: (who) ->
     if who instanceof Fireball
-      @world.getGame().stop()
-      alert 'Run into a fireball.'
+      @world.getGame().stop 'Run into a fireball.'
 
 Kinetic.GlobalObject.extend Tux, Kinetic.Sprite

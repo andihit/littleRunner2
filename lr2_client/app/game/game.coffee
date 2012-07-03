@@ -58,5 +58,7 @@ module.exports = class Game
       @stage.onFrame @loop
       @stage.start()
     
-  stop: ->
+  stop: (message) ->
     @stage.stop()
+    @stage.reset()
+    alert message

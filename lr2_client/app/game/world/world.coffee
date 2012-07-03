@@ -59,8 +59,7 @@ module.exports = class World
       
     # tux gone?
     if @tux.getTop() - @viewport.height > 200
-      @game.stop()
-      alert 'Tux is gone.'
+      @game.stop 'Tux is gone.'
 
   isHit: (x, y, width, height, exclude) ->
     top = y

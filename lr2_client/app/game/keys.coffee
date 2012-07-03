@@ -3,6 +3,7 @@ KEYMAP =
   Right: [68, 39]
   Jump: [87, 38]
   Shoot: [32]
+  FastRun: [17]
 
 class Keys
   pressedKeys: {}
