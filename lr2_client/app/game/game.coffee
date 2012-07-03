@@ -35,7 +35,7 @@ module.exports = class Game
     
   initWorld: (level) =>
     @world = new World @
-    LevelManager.load @world, level
+    LevelManager.load @world, @getResource 'levels/level1.json'
     @stage.add @applyViewport layer for layer in [@world.stickyObjects, @world.movingObjects]
     
   initTux: =>

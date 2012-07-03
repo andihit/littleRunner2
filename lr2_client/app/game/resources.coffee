@@ -7,7 +7,7 @@ IMAGES = [
   'images/game/fireball.png'
 ]
 FILES = [
-  
+  'levels/level1.json'
 ]
 
 
@@ -20,10 +20,30 @@ module.exports = class Resources
       done null, img
     img.src = src
   
-  load: (done) ->
+  loadImages: (done) =>
     async.map IMAGES, @loadImage, (err, results) =>
       for src, i in IMAGES
         @cache[src] = results[i]
+      done err
+  
+  loadFile: (path, done) ->
+    $.getJSON path, (data) ->
+      done null, data
+    .error (xhr, errorName, thrownError) ->
+      done thrownError
+    
+  loadFiles: (done) =>
+    async.map FILES, @loadFile, (err, results) =>
+      for path, i in FILES
+        @cache[path] = results[i]
+      done err
+    
+  load: (done) ->    
+    async.parallel [
+      @loadImages,
+      @loadFiles
+    ], (err, results) ->
+      throw err if err?
       done()
     
   get: (name) ->
