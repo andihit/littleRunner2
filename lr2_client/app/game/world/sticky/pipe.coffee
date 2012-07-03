@@ -3,22 +3,18 @@ utils = require 'game/utils'
 
 module.exports = class Pipe extends StickyObject
   
-  constructor: (@world, @config, done) ->
+  constructor: (@world, config) ->
     super
     Kinetic.Group.call @,
-      x: @config.x
-      y: @config.y
+      x: config.x
+      y: config.y
     
     @setWidth SPRITES[0].width
-    @setHeight (@config.count + 1) * SPRITES[0].height
-    @load done
-  
-  load: (done) ->
-    utils.loadImage 'images/game/pipe.png', (img) =>
-      for i in [0 .. @config.count]
-        sprite = if i == 0 then 'top' else 'piece'
-        @add @createImage img, 0, i * SPRITES[0].height, sprite
-      done null, @
+    @setHeight (config.count + 1) * SPRITES[0].height
+
+    for i in [0 .. @config.count]
+      sprite = if i == 0 then 'top' else 'piece'
+      @add @createImage img, 0, i * SPRITES[0].height, sprite
 
   createImage: (img, x, y, sprite) ->
     sprite = NAMED_SPRITES[sprite]
@@ -26,7 +22,7 @@ module.exports = class Pipe extends StickyObject
     image = new Kinetic.Image
       x: x,
       y: y,
-      image: img,
+      image: @world.getGame().getResource('images/game/pipe.png'),
       width: sprite.width,
       height: sprite.height,
       crop: sprite

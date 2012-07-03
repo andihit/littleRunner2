@@ -4,7 +4,7 @@ module.exports = class GameObject
   height: 0
   decoration: false
   
-  constructor: (@world) ->
+  constructor: (@world, config) ->
   
   getLeft:   -> @getX()
   getRight:  -> @getX() + @width

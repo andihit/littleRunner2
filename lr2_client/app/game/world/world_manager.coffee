@@ -1,7 +1,7 @@
 class Background
-  constructor: (world, config, done) ->
-    world.game.container.css 'background-image', "url(images/game/Background/#{config.name}.png)"
-    done null, @
+  constructor: (world, config) ->
+    stageContainerDOM = world.getGame().getStage().getContainer()
+    $(stageContainerDOM).css 'background-image', "url(images/game/Background/#{config.name}.png)"
     
 module.exports = class WorldManager
 
@@ -18,17 +18,19 @@ module.exports = class WorldManager
       [Brick, {x: 600, y: 300, color: 'brown'}]
       [Tree, {x: 400, y: 200}]
       [Background, {name: 'green_hills1'}]
-      #[Floor, {x: 0,   y: 300, count:  2}]
-      #[Floor, {x: 400, y: 300, count:  3}]
-      #[Floor, {x: 500, y: 200, count:  3}]
+      [Floor, {x: 0,   y: 300, count:  2}]
+      [Floor, {x: 400, y: 300, count:  3}]
+      [Floor, {x: 500, y: 200, count:  3}]
+      
+      [Floor, {x: -100, y: 550, count:  30}]
     ]
     
-  load: (level, done) ->
-    callableElements = level.map (gameObjectDef) =>
-      [Class, config] = gameObjectDef
-      (done) =>
-        go = new Class @world, config, done
-        
-    async.parallel callableElements, (err, gameObjects) =>
-      @world.add(go) for go in gameObjects when go not instanceof Background
-      done()
+  load: (level) ->
+    # load from Game.Resources
+    level = WorldManager.level1()
+    
+    for levelGameObject in level
+      [Class, config] = levelGameObject
+      go = new Class @world, config
+      
+      @world.add(go) unless go instanceof Background

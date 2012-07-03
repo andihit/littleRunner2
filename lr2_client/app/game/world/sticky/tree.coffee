@@ -1,5 +1,4 @@
 StickyImageObject = require './sticky_image_object'
-utils = require 'game/utils'
 
 SPRITE =
   x: 0

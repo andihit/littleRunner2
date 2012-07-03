@@ -4,8 +4,8 @@ utils = require 'game/utils'
 module.exports = class Brick extends StickyImageObject
   imageFile: 'images/game/brick.png'
 
-  constructor: (@world, @config, done) ->
-    @sprite = NAMED_SPRITES[@config.color]
+  constructor: (world, config) ->
+    @sprite = NAMED_SPRITES[config.color]
     super
 
 

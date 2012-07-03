@@ -5,29 +5,24 @@ Keys = require 'game/keys'
 
 module.exports = class Tux extends PhysicsObject
   
-  constructor: (@world, x, done) ->
-    @load x, done
-  
-  load: (x, done) ->
-    utils.loadImage 'images/game/tux.png', (img) =>
-      Kinetic.Sprite.call @,
-        x: x,
-        y: 0,
-        image: img,
-        animation: 'standing',
-        animations:
-          standing: utils.getSpriteSheet 46, 66,  0, 1, 1
-          walking:  utils.getSpriteSheet 46, 66,  0, 5
-          small:    utils.getSpriteSheet 49, 48, 66, 7
-        frameRate: 6
-        fill: '#ccc'
+  constructor: (@world, config) ->
+    super
+    Kinetic.Sprite.call @,
+      x: config.x,
+      y: config.y,
+      image: @world.getGame().getResource('images/game/tux.png'),
+      animation: 'standing',
+      animations:
+        standing: utils.getSpriteSheet 46, 66,  0, 1, 1
+        walking:  utils.getSpriteSheet 46, 66,  0, 5
+        small:    utils.getSpriteSheet 49, 48, 66, 7
+      frameRate: 6
+      fill: '#ccc'
       
-      @width = 46
-      @height = 66
-      @_direction 'right'
-      
-      done()
-  
+    @setWidth 46
+    @setHeight 66
+    @_direction 'right'
+    
   jumping: (frame) ->
     JUMPING_DISTANCE = 180
     moveHeight = 0.7 * frame.timeDiff
@@ -60,9 +55,9 @@ module.exports = class Tux extends PhysicsObject
     x = if @direction == 'right' then @getRight() + 20 else @getLeft() - 20
     y = @getTop() + 20
     
-    fireball = new Fireball @world, {x, y, @direction}, =>
-      @world.add fireball
-      fireball.drawLayer()
+    fireball = new Fireball @world, {x, y, @direction}
+    @world.add fireball
+    fireball.drawLayer()
   
   _direction: (newDirection) ->
     return if @direction == newDirection
@@ -108,7 +103,7 @@ module.exports = class Tux extends PhysicsObject
   # events
   crashed: (who) ->
     if who instanceof Fireball
-      @world.game.stop()
+      @world.getGame().stop()
       alert 'Run into a fireball.'
 
 Kinetic.GlobalObject.extend Tux, Kinetic.Sprite

@@ -4,12 +4,15 @@ Viewport = require './viewport'
 
 module.exports = class World
   
-  constructor: (@game, width, height) ->
+  constructor: (@game) ->
     @movingObjects = new Kinetic.Layer
     @stickyObjects = new Kinetic.Layer
     @tux = null
     
-    @viewport = new Viewport width, height
+    @viewport = new Viewport @game.getStage().getWidth(), @game.getStage().getHeight()
+  
+  getGame: ->
+    @game
     
   changeViewport: (x, y) ->
     @viewport.x = x

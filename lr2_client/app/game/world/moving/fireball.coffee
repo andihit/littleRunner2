@@ -1,34 +1,28 @@
 MovingObject = require './moving_object'
 StickyObject = require '../sticky/sticky_object'
-utils = require 'game/utils'
 
 VELOCTIY = 0.4
 
 module.exports = class Fireball extends MovingObject
   
-  constructor: (@world, @config, done) ->
+  constructor: (@world, config) ->
     super
+    
+    img = @world.getGame().getResource('images/game/fireball.png')
+    Kinetic.Image.call @,
+      x: config.x,
+      y: config.y,
+      image: img,
+      width: img.width,
+      height: img.height
+
+    @setWidth img.width
+    @setHeight img.height
     
     @distance = 0
     @stage = 0
-    @flyVector = [(if @config.direction == 'right' then VELOCTIY else -VELOCTIY), 0]
+    @flyVector = [(if config.direction == 'right' then VELOCTIY else -VELOCTIY), 0]
     
-    @load done
-    
-  load: (done) ->
-    utils.loadImage 'images/game/fireball.png', (img) =>
-      @setWidth img.width
-      @setHeight img.height
-      
-      Kinetic.Image.call @,
-        x: @config.x,
-        y: @config.y,
-        image: img,
-        width: @getWidth(),
-        height: @getHeight()
-        
-      done null, @
-
   loop: (frame) ->
     mx = @flyVector[0] * frame.timeDiff
     my = @flyVector[1] * frame.timeDiff

@@ -1,25 +1,19 @@
 StickyObject = require './sticky_object'
-utils = require 'game/utils'
 
 module.exports = class StickyImageObject extends StickyObject
   
-  constructor: (@world, @config, done) ->
+  constructor: (world, config) ->
     super
-    @load done
-  
-  load: (done) ->
-    utils.loadImage @imageFile, (img) =>
-      Kinetic.Image.call @,
-        x: @config.x,
-        y: @config.y,
-        image: img,
-        width: @sprite.width,
-        height: @sprite.height,
-        crop: @sprite
+
+    Kinetic.Image.call @,
+      x: config.x,
+      y: config.y,
+      image: @world.getGame().getResource(@imageFile),
+      width: @sprite.width,
+      height: @sprite.height,
+      crop: @sprite
       
-      @setWidth @sprite.width
-      @setHeight @sprite.height
-      
-      done null, @
+    @setWidth @sprite.width
+    @setHeight @sprite.height
 
 Kinetic.GlobalObject.extend StickyImageObject, Kinetic.Image
