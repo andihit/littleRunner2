@@ -1,4 +1,4 @@
-NAME=erws
+NAME=lr2server
 
 all: compile release
 	./rebar compile
