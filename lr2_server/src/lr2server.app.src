@@ -1,0 +1,12 @@
+{application, lr2server,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { lr2server_app, []}},
+  {env, []}
+ ]}.
