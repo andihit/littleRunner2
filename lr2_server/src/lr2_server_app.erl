@@ -10,6 +10,7 @@
 %% ===================================================================
 
 start(_StartType, _StartArgs) ->
+	lager:error("oh no!"),
     lr2_server_sup:start_link().
 
 stop(_State) ->

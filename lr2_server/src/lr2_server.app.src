@@ -5,7 +5,9 @@
   {registered, []},
   {applications, [
                   kernel,
-                  stdlib
+                  stdlib,
+                  crypto,cowboy,
+                  lager
                  ]},
   {mod, { lr2_server_app, []}},
   {env, []}
