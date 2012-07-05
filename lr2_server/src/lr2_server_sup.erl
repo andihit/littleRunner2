@@ -1,5 +1,5 @@
 
--module(lr2server_sup).
+-module(lr2_server_sup).
 
 -behaviour(supervisor).
 

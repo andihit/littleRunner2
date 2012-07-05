@@ -22,3 +22,4 @@ Thumbs.db
 # Erlang
 ebin/
 deps/
+rel/lr2_server

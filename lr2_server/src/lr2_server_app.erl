@@ -1,4 +1,4 @@
--module(lr2server_app).
+-module(lr2_server_app).
 
 -behaviour(application).
 
@@ -10,7 +10,7 @@
 %% ===================================================================
 
 start(_StartType, _StartArgs) ->
-    lr2server_sup:start_link().
+    lr2_server_sup:start_link().
 
 stop(_State) ->
     ok.
