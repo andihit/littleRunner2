@@ -12,6 +12,9 @@ module.exports = class NetworkManager
 
   initWebsocket: (host) ->
     @ws = new WebSocket host
+    @ws.onopen = =>
+      console.log 'opened'
+      @ws.send 'first msg'
     @ws.onmessage = @handleMessage
     @ws.onclose = @connectionLost
     
