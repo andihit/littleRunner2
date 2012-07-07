@@ -30,6 +30,7 @@ module.exports = class World
     
   add: (go) ->
     @getLayer(go).add go
+    go.start?()
     
   remove: (go) ->
     @getLayer(go).remove go

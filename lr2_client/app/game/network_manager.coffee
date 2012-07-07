@@ -20,7 +20,7 @@ module.exports = class NetworkManager
     
     console.log type, data
     
-    if type in ['id', 'requestState', 'newPlayer', 'state', 'keyChange', 'lostPlayer']
+    if type in ['id', 'newPlayer', 'requestState', 'state', 'keyChange', 'lostPlayer']
       @[type](data)
     
   connectionLost: =>
@@ -46,6 +46,21 @@ module.exports = class NetworkManager
       }
     ]
   
+  
+  # remote messages
+  id: (id) ->
+    @playerID = id
+    @world.tux.setId @playerID
+  
+  newPlayer: (player) ->
+    """
+    {id: 'PlayerID', x: 0, y: 0}
+    """
+    @playerKeys[player.id] = new Keys
+    playerTux = new Tux @world, player, @playerKeys[player.id]
+    @world.add playerTux
+    playerTux.drawLayer()
+  
   requestState: (ref) ->
     state =
       movingObjects: []
@@ -64,18 +79,6 @@ module.exports = class NetworkManager
         y: player.getY()
 
     @ws.send JSON.stringify ['state', [ref, state]]
-  
-  
-  # remote messages
-  id: (id) ->
-    @playerID = id
-    @world.tux.setId @playerID
-  
-  newPlayer: (player) ->
-    @playerKeys[player.id] = new Keys
-    playerTux = new Tux @world, player, @playerKeys[player.id]
-    @world.add playerTux
-    playerTux.drawLayer()
     
   state: (state) ->
     """

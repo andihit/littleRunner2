@@ -49,8 +49,6 @@ module.exports = class Game
     @tux = new Tux @world, {}, @keys
     @world.add @tux
     @world.tux = @tux
-    
-    @tux.start()
   
   start: ->
     @initStage @container

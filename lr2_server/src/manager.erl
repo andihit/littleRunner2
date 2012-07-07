@@ -75,12 +75,12 @@ loop(Clients) ->
 		{newclient, Pid} ->
 			PlayerId = new_client(Clients, Pid),
 			loop(dict:store(Pid, PlayerId, Clients));
+		{message, Pid, Msg} ->
+			handle_message(Clients, Pid, Msg),
+			loop(Clients);
 		{lostclient, Pid} ->
 			lager:info("Lost client ~p", [Pid]),
 			PlayerPid = dict:fetch(Pid, Clients),
 			send_to_others(Clients, Pid, helper:json_encode([lostPlayer, PlayerPid])),
-			loop(dict:erase(Pid, Clients));
-		{message, Pid, Msg} ->
-			handle_message(Clients, Pid, Msg),
-			loop(Clients)
+			loop(dict:erase(Pid, Clients))
 	end.
