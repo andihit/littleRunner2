@@ -22,4 +22,6 @@ Thumbs.db
 # Erlang
 ebin/
 deps/
+log/
 rel/lr2_server
+erl_crash.dump

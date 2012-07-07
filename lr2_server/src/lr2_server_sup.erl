@@ -1,4 +1,3 @@
-
 -module(lr2_server_sup).
 
 -behaviour(supervisor).
