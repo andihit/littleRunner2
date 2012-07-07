@@ -62,12 +62,11 @@ module.exports = class Game
       @stage.onFrame @world.loop
       @stage.start()
       
-      # TODO
-      #@networkManager.addPlayer id: 'A', x: 500, y: 100
-      #_.delay (=> @networkManager.keyChange id: 'A', down: true, keyCode: 32), 5000
-      
-  stop: (message) ->
+  stop: (reason) ->
     @stage.stop()
     @stage.reset()
     @networkManager.stop()
-    alert message
+    
+    $('#gameOver #reason').text reason
+    @container.css 'opacity', '.5'
+    $('#gameOver').css 'display', 'block'
