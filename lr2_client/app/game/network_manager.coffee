@@ -3,10 +3,9 @@ Keys = require './keys'
 
 module.exports = class NetworkManager
   
-  constructor: (@world, @localKeys) ->
+  constructor: (@world, localKeys) ->
     @playerID = null
-    @playerKeys = {}
-    @localKeys.listener = @
+    localKeys.listener = @
     
     @initWebsocket 'ws://localhost:4444'
 
@@ -17,8 +16,6 @@ module.exports = class NetworkManager
     
   handleMessage: (msg) =>
     [type, data] = JSON.parse msg.data
-    
-    console.log type, data
     
     if type in ['id', 'newPlayer', 'requestState', 'state', 'keyChange', 'lostPlayer']
       @[type](data)
@@ -56,8 +53,7 @@ module.exports = class NetworkManager
     """
     {id: 'PlayerID', x: 0, y: 0}
     """
-    @playerKeys[player.id] = new Keys
-    playerTux = new Tux @world, player, @playerKeys[player.id]
+    playerTux = new Tux @world, player, new Keys()
     @world.add playerTux
     playerTux.drawLayer()
   
@@ -102,15 +98,15 @@ module.exports = class NetworkManager
     """
     {id: 'PlayerID', down: true, keyCode: 65}
     """
+    playerKeys = @world.playerObjects.get('#' + data.id)[0].keys
     if data.down
-      @playerKeys[data.id].keyDown data.keyCode
+      playerKeys.keyDown data.keyCode
     else
-      @playerKeys[data.id].keyUp data.keyCode
+      playerKeys.keyUp data.keyCode
       
   lostPlayer: (playerId) ->
     player = @world.playerObjects.get '#' + playerId
     @world.playerObjects.remove player[0]
-    delete @playerKeys[playerId]
     
   stop: ->
     @ws.close()
