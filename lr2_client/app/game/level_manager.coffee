@@ -8,11 +8,13 @@ class Background
 module.exports = class LevelManager
 
   @load: (world, level) ->    
-    for gameObjectData in level
+    for gameObjectData, idx in level
       [ClassName, config] = gameObjectData
       
       if ClassName == 'Background'
         new Background world, config
       else
         Class = GameObjects[ClassName]
-        world.add new Class world, config
+        go = new Class world, config
+        go.setId "GameObj_#{idx}"
+        world.add go

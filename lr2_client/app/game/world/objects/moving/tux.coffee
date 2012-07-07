@@ -7,8 +7,9 @@ module.exports = class Tux extends PhysicsObject
   constructor: (@world, config, @keys) ->
     super
     Kinetic.Sprite.call @,
-      x: config.x,
-      y: config.y,
+      id: config.id,
+      x: config.x or 100,
+      y: config.y or 100,
       image: @world.getGame().getResource('images/game/tux.png'),
       animation: 'standing',
       animations:
@@ -103,7 +104,7 @@ module.exports = class Tux extends PhysicsObject
     
   # events
   crashed: (who) ->
-    if who instanceof Fireball
+    if who instanceof Fireball and @world.tux == @
       @world.getGame().stop 'Run into a fireball.'
 
 Kinetic.GlobalObject.extend Tux, Kinetic.Sprite

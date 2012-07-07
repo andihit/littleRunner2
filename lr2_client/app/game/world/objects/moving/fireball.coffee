@@ -38,6 +38,8 @@ module.exports = class Fireball extends MovingObject
       
     @moveX mx
     @moveY my
+    
+    @remove() if @distance >= 1000
        
   crashed: (who) ->
     if who instanceof StickyObject and @stage % 2 != 0 and @stage < 7
@@ -45,7 +47,10 @@ module.exports = class Fireball extends MovingObject
       @stage++
       @distance = 0
     else
-      @world.remove @
-      @drawLayer()
-    
+      @remove()
+      
+  remove: ->
+    @world.remove @
+    @drawLayer()
+      
 Kinetic.GlobalObject.extend Fireball, Kinetic.Image

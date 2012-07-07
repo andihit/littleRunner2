@@ -46,7 +46,7 @@ module.exports = class Game
     @networkManager = new NetworkManager @world, @keys
     
   initTux: =>
-    @tux = new Tux @world, {x: 100, y: 100}, @keys
+    @tux = new Tux @world, {}, @keys
     @world.add @tux
     @world.tux = @tux
     
@@ -71,5 +71,5 @@ module.exports = class Game
   stop: (message) ->
     @stage.stop()
     @stage.reset()
-    @networkManager.dispose()
+    @networkManager.stop()
     alert message
