@@ -20,8 +20,8 @@ start(_StartType, _StartArgs) ->
         cowboy_http_protocol, [{dispatch, Dispatch}]
     ),
 	
-	state_manager:start_link(),
 	manager:start_link(),
+	state_manager:start_link(),
 	
     lr2_server_sup:start_link().
 

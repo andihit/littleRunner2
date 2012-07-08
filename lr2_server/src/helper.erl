@@ -1,6 +1,6 @@
 -module(helper).
 
--export([destruct/1, json_encode/1, json_decode/1, dict_find_key/2, dict_values/1]).
+-export([destruct/1, json_encode/1, json_decode/1, dict_find_key/2, dict_values/1, list_filter_value/2]).
 
 
 %% @doc Flatten {struct, [term()]} to [term()] recursively.
@@ -27,7 +27,14 @@ dict_find_key(Value, Dict) ->
 
 dict_values({_K, V}) ->
 	V;
+dict_values([]) ->
+	[];
 dict_values([H|T]) ->
 	[dict_values(H)|T];
 dict_values(Dict) ->
 	dict_values(dict:to_list(Dict)).
+
+%% @doc list: return a list with all values except ExcludeItem
+list_filter_value(List, ExcludeItem) ->
+	ExcludeFun = fun(Item) -> Item /= ExcludeItem end,
+	lists:filter(ExcludeFun, List).

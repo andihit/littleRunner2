@@ -28,6 +28,7 @@ module.exports = class Tux extends PhysicsObject
   
   setScore: (score) ->
     @score = score
+    @world.getGame().getHighscore().update()
     
   getScore: ->
     @score
@@ -116,5 +117,4 @@ module.exports = class Tux extends PhysicsObject
     if who instanceof Fireball and @world.tux == @
       @world.getGame().stop 'Run into a fireball.'
     else
-      @score++
-      @world.getGame().getHighscore().update()
+      @setScore @score + 1

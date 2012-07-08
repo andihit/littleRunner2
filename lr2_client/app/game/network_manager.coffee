@@ -117,7 +117,15 @@ module.exports = class NetworkManager
       go.setX position.x
       go.setY position.y
       
-    @newPlayer player for player in state.players when player.id != @world.tux.getId()
+    for player in state.players when player.id != @world.tux.getId()
+      existingPlayer = @world.playerObjects.get '#' + player.id
+      if existingPlayer.length == 0
+        @newPlayer player
+      else
+        existingPlayer[0].setX player.x
+        existingPlayer[0].setY player.y
+        existingPlayer[0].setScore player.score
+      
     
   keyChange: (data) ->
     """

@@ -12,9 +12,7 @@ start_link() ->
 
 
 send_to_others(AllClients, ExcludeClient, Msg) ->
-	ExcludeFun = fun(Client) -> Client /= ExcludeClient end,
-	Clients = lists:filter(ExcludeFun, dict:fetch_keys(AllClients)),
-
+	Clients = helper:list_filter_value(dict:fetch_keys(AllClients), ExcludeClient),
 	SendFun = fun(Client) ->
 		Client ! Msg
 	end,
@@ -74,9 +72,15 @@ loop(Clients) ->
 		{message, Pid, Msg} ->
 			NewClients = handle_message(Clients, Pid, Msg),
 			loop(NewClients);
+		{syncState} ->
+			state_manager ! {syncState, dict:fetch_keys(Clients)},
+			loop(Clients);
 		{lostclient, Pid} ->
 			lager:info("Lost client ~p", [Pid]),
 			PlayerPid = dict:fetch(Pid, Clients),
 			send_to_others(Clients, Pid, helper:json_encode([lostPlayer, PlayerPid])),
-			loop(dict:erase(Pid, Clients))
+			loop(dict:erase(Pid, Clients));
+		Other ->
+			lager:error("Unknown message in manager: ~p", [Other]),
+			loop(Clients)
 	end.
