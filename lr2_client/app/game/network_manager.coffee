@@ -77,7 +77,7 @@ module.exports = class NetworkManager
     @world.add playerTux
     playerTux.drawLayer()
   
-  requestState: (ref) ->
+  requestState: ->
     state =
       movingObjects: []
       players: []
@@ -95,7 +95,7 @@ module.exports = class NetworkManager
         y: player.getY()
         score: player.getScore()
 
-    @ws.send JSON.stringify ['state', [ref, state]]
+    @ws.send JSON.stringify ['state', state]
     
   state: (state) ->
     """
@@ -113,7 +113,7 @@ module.exports = class NetworkManager
       go.setX position.x
       go.setY position.y
       
-    @newPlayer player for player in state.players
+    @newPlayer player for player in state.players when player.id != @world.tux.getId()
     
   keyChange: (data) ->
     """

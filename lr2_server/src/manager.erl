@@ -11,14 +11,14 @@ start_link() ->
 	register(manager, spawn_link(?MODULE, loop, [dict:new()])).
 
 
-send_to_others(Clients, Pid, Msg) ->
-	F = fun(Client) ->
-		if
-			Client /= Pid -> Client ! Msg;
-			true -> ok
-		end
+send_to_others(AllClients, ExcludeClient, Msg) ->
+	ExcludeFun = fun(Client) -> Client /= ExcludeClient end,
+	Clients = lists:filter(ExcludeFun, dict:fetch_keys(AllClients)),
+
+	SendFun = fun(Client) ->
+		Client ! Msg
 	end,
-	lists:foreach(F, dict:fetch_keys(Clients)).
+	lists:foreach(SendFun, Clients).
 
 
 generate_guest_id() ->
@@ -28,16 +28,9 @@ generate_guest_id() ->
 new_client(Clients, Pid) ->
 	PlayerId = generate_guest_id(),
 	lager:info("New client ~p with ID: ~p", [Pid, PlayerId]),
-	Pid ! helper:json_encode([id, PlayerId]),
 	
-	%% if there are clients, send the first a state request
-	NumClients = dict:size(Clients),
-	if
-		NumClients >= 1 ->
-			[{FirstPid, _}|_] = dict:to_list(Clients),
-			FirstPid ! helper:json_encode([requestState, PlayerId]);
-		true -> ok
-	end,
+	Pid ! helper:json_encode([id, PlayerId]),
+	state_manager ! {wantState, Pid, dict:fetch_keys(Clients)},
 	
 	%% register new player to others
 	send_to_others(Clients, Pid, helper:json_encode([newPlayer, {struct,
@@ -52,17 +45,17 @@ handle_message(Clients, Pid, Json) ->
 	
 	case Type of
 		<< "state" >> ->
-			[PlayerId, State] = Data,
-			PlayerPid = helper:find_key(PlayerId, Clients),
-			PlayerPid ! helper:json_encode([state, State]),
+			state_manager ! {gotState, Data},
 			NewClients = Clients;
+		
 		<< "keyChange" >> ->
 			send_to_others(Clients, Pid, Json),
 			NewClients = Clients;
+		
 		<< "nickChange" >> ->
 			[_OldNick,NewNick] = Data,
-			NewClients = dict:store(Pid, NewNick, Clients),
-			send_to_others(NewClients, Pid, Json)
+			send_to_others(Clients, Pid, Json),
+			NewClients = dict:store(Pid, NewNick, Clients)
 	end,
 	NewClients.
 
