@@ -25,7 +25,10 @@ module.exports = class Highscore
     
   changeNickname: =>
     newNick = prompt 'Your new name'
-    @world.getGame().changeNickname newNick
+    
+    until @world.getGame().changeNickname newNick
+      newNick = prompt 'Nick already taken. Choose another'
+      
     @update()
 
   dispose: ->

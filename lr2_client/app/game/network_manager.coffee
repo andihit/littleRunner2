@@ -53,13 +53,17 @@ module.exports = class NetworkManager
     ]
     
   changeNickname: (newNick) ->
+    if @world.playerObjects.get('#' + newNick).length > 0
+      return false
+    
     oldNick = @world.tux.getId()
     @world.tux.setId newNick
-    return unless @isOnline
     
-    @ws.send JSON.stringify [
-      'nickChange', [oldNick, newNick]
-    ]
+    if @isOnline
+      @ws.send JSON.stringify [
+        'nickChange', [oldNick, newNick]
+      ]
+    true
   
   
   # remote messages
