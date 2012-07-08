@@ -3,7 +3,7 @@ World = require './world/world'
 LevelManager = require './level_manager'
 NetworkManager = require './network_manager'
 Tux = require './world/objects/moving/tux'
-Highscore = require './highscore'
+HighscoreOverlay = require './highscore_overlay'
 Keys = require './keys'
 
 module.exports = class Game
@@ -54,12 +54,12 @@ module.exports = class Game
     @world.add @tux
     @world.tux = @tux
   
-  initHighscore: ->
-    @highscore = new Highscore @container.find('#highscore'), @world
-    @highscore.update()
+  initHighscoreOverlay: ->
+    @highscoreOverlay = new HighscoreOverlay @container.find('#highscore'), @world
+    @highscoreOverlay.update()
   
-  getHighscore: ->
-    @highscore
+  getHighscoreOverlay: ->
+    @highscoreOverlay
   
   changeNickname: (newNick) ->
     @networkManager.changeNickname newNick
@@ -72,7 +72,7 @@ module.exports = class Game
       @initWorld 'level1.json'
       @initNetworkManager()
       @initTux()
-      @initHighscore()
+      @initHighscoreOverlay()
     
       @stage.onFrame @world.loop
       @stage.start()
@@ -81,7 +81,7 @@ module.exports = class Game
     @gameOver = true
     @stage.stop()
     @networkManager.stop()
-    @highscore.dispose()
+    @highscoreOverlay.dispose()
     
     $(window).off 'keydown keyup'
     

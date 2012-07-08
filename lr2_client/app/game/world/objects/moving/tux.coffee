@@ -35,7 +35,7 @@ module.exports = class Tux extends PhysicsObject
     
   setScore: (score) ->
     @score = score
-    @world.getGame().getHighscore().update()
+    @world.getGame().getHighscoreOverlay().update()
     
   getLives: ->
     @lives

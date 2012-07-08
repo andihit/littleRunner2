@@ -1,4 +1,4 @@
-module.exports = class Highscore
+module.exports = class HighscoreOverlay
   
   constructor: (@container, @world) ->
     @isOffline = false
