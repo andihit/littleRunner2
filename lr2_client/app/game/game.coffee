@@ -3,6 +3,7 @@ World = require './world/world'
 LevelManager = require './level_manager'
 NetworkManager = require './network_manager'
 Tux = require './world/objects/moving/tux'
+Highscore = require './highscore'
 Keys = require './keys'
 
 module.exports = class Game
@@ -14,7 +15,7 @@ module.exports = class Game
       container: container[0],
       width:     container.width(),
       height:    container.height()
-      
+    
   getStage: ->
     @stage
     
@@ -37,7 +38,7 @@ module.exports = class Game
   getResource: (name) ->
     @resources.get name
     
-  initWorld: (level) =>
+  initWorld: (level) ->
     @world = new World @
     LevelManager.load @world, @getResource 'levels/level1.json'
     @stage.add layer for layer in @world.getAllLayers()
@@ -45,28 +46,41 @@ module.exports = class Game
   initNetworkManager: ->
     @networkManager = new NetworkManager @world, @keys
     
-  initTux: =>
+  initTux: ->
     @tux = new Tux @world, {}, @keys
     @world.add @tux
     @world.tux = @tux
   
+  initHighscore: ->
+    @highscore = new Highscore @container.find('#highscore'), @world
+  
+  getHighscore: ->
+    @highscore
+  
+  changeNickname: (newNick) ->
+    @networkManager.changeNickname newNick
+    
   start: ->
-    @initStage @container
+    @initStage @container.find '#canvasContainer'
     @initKeyEvents()
     
     @initResources =>
       @initWorld 'level1.json'
       @initNetworkManager()
       @initTux()
+      @initHighscore()
     
       @stage.onFrame @world.loop
       @stage.start()
-      
+  
   stop: (reason) ->
+    @stopped = true
     @stage.stop()
-    @stage.reset()
     @networkManager.stop()
+    @highscore.dispose()
     
-    $('#gameOver #reason').text reason
-    @container.css 'opacity', '.5'
-    $('#gameOver').css 'display', 'block'
+    $(window).off 'keydown keyup'
+    
+    @container.find('#gameOver #reason').text reason
+    @container.find('#canvasContainer').css 'opacity', '.4'
+    @container.find('#gameOver').css 'display', 'block'

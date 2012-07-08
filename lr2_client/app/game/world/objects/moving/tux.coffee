@@ -7,7 +7,7 @@ module.exports = class Tux extends PhysicsObject
   constructor: (@world, config, @keys) ->
     super
     Kinetic.Sprite.call @,
-      id: config.id,
+      id: config.id or 'You',
       x: config.x or 100,
       y: config.y or 100,
       image: @world.getGame().getResource('images/game/tux.png'),
@@ -22,6 +22,13 @@ module.exports = class Tux extends PhysicsObject
     @setWidth 46
     @setHeight 66
     @_direction 'right'
+    @score = 0
+  
+  setScore: (score) ->
+    @score = score
+    
+  getScore: ->
+    @score
     
   jumping: (frame) ->
     JUMPING_DISTANCE = 180
@@ -106,5 +113,8 @@ module.exports = class Tux extends PhysicsObject
   crashed: (who) ->
     if who instanceof Fireball and @world.tux == @
       @world.getGame().stop 'Run into a fireball.'
+    else
+      @score++
+      @world.getGame().getHighscore().update()
 
 Kinetic.GlobalObject.extend Tux, Kinetic.Sprite

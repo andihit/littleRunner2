@@ -4,56 +4,75 @@ Keys = require './keys'
 module.exports = class NetworkManager
   
   constructor: (@world, localKeys) ->
-    @playerID = null
     localKeys.listener = @
     
+    @isOnline = false
     @initWebsocket 'ws://localhost:4444'
 
   initWebsocket: (host) ->
     @ws = new WebSocket host
+    @ws.onopen = => @isOnline = true
     @ws.onmessage = @handleMessage
+    @ws.onerror = (error) -> console.log 'WebSocket error:',error
     @ws.onclose = @connectionLost
     
   handleMessage: (msg) =>
     [type, data] = JSON.parse msg.data
     
-    if type in ['id', 'newPlayer', 'requestState', 'state', 'keyChange', 'lostPlayer']
+    if type in ['id', 'newPlayer', 'requestState', 'state', 'keyChange', 'nickChange', 'lostPlayer']
       @[type](data)
     
   connectionLost: =>
-    @world.getGame().stop 'Connection lost, sorry.'
-
+    @isOnline = false
+    
+    unless @world.getGame().stopped?
+      @world.getGame().getHighscore().setOffline()
+      
 
   # local payer
   keyDown: (keyCode) ->
+    return unless @isOnline
+    
     @ws.send JSON.stringify [
       'keyChange', {
-        id: @playerID
+        id: @world.tux.getId()
         down: true
         keyCode: keyCode
       }
     ]
     
   keyUp: (keyCode) ->
+    return unless @isOnline
+    
     @ws.send JSON.stringify [
       'keyChange', {
-        id: @playerID
+        id: @world.tux.getId()
         down: false
         keyCode: keyCode
       }
+    ]
+    
+  changeNickname: (newNick) ->
+    oldNick = @world.tux.getId()
+    @world.tux.setId newNick
+    return unless @isOnline
+    
+    @ws.send JSON.stringify [
+      'nickChange', [oldNick, newNick]
     ]
   
   
   # remote messages
   id: (id) ->
-    @playerID = id
-    @world.tux.setId @playerID
+    @world.tux.setId id
+    @world.getGame().getHighscore().update()
   
   newPlayer: (player) ->
     """
-    {id: 'PlayerID', x: 0, y: 0}
+    {id: 'PlayerID', x: 0, y: 0, score: 0}
     """
     playerTux = new Tux @world, player, new Keys()
+    playerTux.setScore player.score
     @world.add playerTux
     playerTux.drawLayer()
   
@@ -73,6 +92,7 @@ module.exports = class NetworkManager
         id: player.getId()
         x: player.getX()
         y: player.getY()
+        score: player.getScore()
 
     @ws.send JSON.stringify ['state', [ref, state]]
     
@@ -83,7 +103,7 @@ module.exports = class NetworkManager
         {id: 'MovingObjectID', x: 0, y: 0}
       ],
       players: [
-        {id: 'PlayerID', x: 0, y: 0}
+        {id: 'PlayerID', x: 0, y: 0, score: 0}
       ]
     }
     """
@@ -98,12 +118,21 @@ module.exports = class NetworkManager
     """
     {id: 'PlayerID', down: true, keyCode: 65}
     """
+    console.log data
     playerKeys = @world.playerObjects.get('#' + data.id)[0].keys
     if data.down
       playerKeys.keyDown data.keyCode
     else
       playerKeys.keyUp data.keyCode
-      
+  
+  nickChange: (data) ->
+    [oldNick, newNick] = data
+    player = @world.playerObjects.get('#' + oldNick)[0]
+    console.log oldNick, newNick, player
+    player.setId newNick
+    console.log player.getId()
+    @world.getGame().getHighscore().update()
+    
   lostPlayer: (playerId) ->
     player = @world.playerObjects.get '#' + playerId
     @world.playerObjects.remove player[0]
