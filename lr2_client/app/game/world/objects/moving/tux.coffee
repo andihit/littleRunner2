@@ -4,6 +4,8 @@ utils = require 'game/utils'
 
 module.exports = class Tux extends PhysicsObject
   
+  _(@prototype).extend Kinetic.Sprite.prototype
+  
   constructor: (@world, config, @keys) ->
     super
     Kinetic.Sprite.call @,
@@ -116,5 +118,3 @@ module.exports = class Tux extends PhysicsObject
     else
       @score++
       @world.getGame().getHighscore().update()
-
-Kinetic.GlobalObject.extend Tux, Kinetic.Sprite

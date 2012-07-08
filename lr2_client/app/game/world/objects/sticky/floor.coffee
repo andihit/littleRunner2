@@ -3,6 +3,8 @@ utils = require 'game/utils'
 
 module.exports = class Floor extends StickyObject
   
+  _(@prototype).extend Kinetic.Group.prototype
+  
   constructor: (@world, config) ->
     super
     Kinetic.Group.call @,
@@ -32,8 +34,6 @@ module.exports = class Floor extends StickyObject
       width: sprite.width,
       height: sprite.height,
       crop: sprite
-
-Kinetic.GlobalObject.extend Floor, Kinetic.Group
 
 
 SPRITES = utils.getSpriteSheet 64, 64, 0, 2

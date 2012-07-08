@@ -3,6 +3,8 @@ utils = require 'game/utils'
 
 module.exports = class Pipe extends StickyObject
   
+  _(@prototype).extend Kinetic.Group.prototype
+  
   constructor: (@world, config) ->
     super
     Kinetic.Group.call @,
@@ -26,8 +28,6 @@ module.exports = class Pipe extends StickyObject
       width: sprite.width,
       height: sprite.height,
       crop: sprite
-
-Kinetic.GlobalObject.extend Pipe, Kinetic.Group
 
 
 SPRITES = utils.getSpriteSheet 64, 32, 0, 1

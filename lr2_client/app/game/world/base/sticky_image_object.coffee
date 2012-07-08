@@ -2,6 +2,8 @@ StickyObject = require './sticky_object'
 
 module.exports = class StickyImageObject extends StickyObject
   
+  _(@prototype).extend Kinetic.Image.prototype
+  
   constructor: (world, config) ->
     super
 
@@ -15,5 +17,3 @@ module.exports = class StickyImageObject extends StickyObject
       
     @setWidth @sprite.width
     @setHeight @sprite.height
-
-Kinetic.GlobalObject.extend StickyImageObject, Kinetic.Image

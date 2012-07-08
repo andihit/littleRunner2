@@ -5,6 +5,8 @@ VELOCTIY = 0.4
 
 module.exports = class Fireball extends MovingObject
   
+  _(@prototype).extend Kinetic.Image.prototype
+  
   constructor: (@world, config) ->
     super
     
@@ -52,5 +54,3 @@ module.exports = class Fireball extends MovingObject
   remove: ->
     @world.remove @
     @drawLayer()
-      
-Kinetic.GlobalObject.extend Fireball, Kinetic.Image
