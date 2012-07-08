@@ -35,7 +35,7 @@ module.exports = class Tux extends PhysicsObject
     
   setScore: (score) ->
     @score = score
-    @world.getGame().getHighscoreOverlay().update()
+    @world.getGame().getOverlay('highscore').update()
     
   getLives: ->
     @lives
@@ -44,7 +44,7 @@ module.exports = class Tux extends PhysicsObject
     @lives = lives
     
     if @isMainPlayer()
-      console.log 'update lives icons'
+      @world.getGame().getOverlay('lives').update()
     
   lostLive: ->
     if @lives > 0

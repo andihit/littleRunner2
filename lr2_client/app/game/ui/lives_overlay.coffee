@@ -3,5 +3,11 @@ module.exports = class LivesOverlay
   constructor: (@container, @world) ->
     
   update: ->
-    @world.tux.getLives()
-    @container.html text
+    html = ''
+    lives = @world.tux.getLives()
+    
+    while lives > 0
+      html += '<img src="images/game/minitux.png" />'
+      lives--
+      
+    @container.html html

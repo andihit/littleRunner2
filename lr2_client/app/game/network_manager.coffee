@@ -26,7 +26,7 @@ module.exports = class NetworkManager
     @isOnline = false
     
     unless @world.getGame().gameOver?
-      @world.getGame().getHighscoreOverlay().setOffline()
+      @world.getGame().getOverlay('highscore').setOffline()
       
 
   # local payer
@@ -69,7 +69,7 @@ module.exports = class NetworkManager
   # remote messages
   id: (id) ->
     @world.tux.setId id
-    @world.getGame().getHighscoreOverlay().update()
+    @world.getGame().getOverlay('highscore').update()
   
   newPlayer: (player) ->
     """
@@ -145,13 +145,13 @@ module.exports = class NetworkManager
     player = @world.playerObjects.get('#' + oldNick)[0]
     player.setId newNick
     
-    @world.getGame().getHighscoreOverlay().update()
+    @world.getGame().getOverlay('highscore').update()
     
   lostPlayer: (playerId) ->
     player = @world.playerObjects.get '#' + playerId
     @world.remove player[0]
     
-    @world.getGame().getHighscoreOverlay().update()
+    @world.getGame().getOverlay('highscore').update()
     
   stop: ->
     @ws.close()

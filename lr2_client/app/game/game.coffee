@@ -4,6 +4,7 @@ LevelManager = require './level_manager'
 NetworkManager = require './network_manager'
 Tux = require './world/objects/moving/tux'
 HighscoreOverlay = require './ui/highscore_overlay'
+LivesOverlay = require './ui/lives_overlay'
 Keys = require './ui/keys'
 
 module.exports = class Game
@@ -54,12 +55,16 @@ module.exports = class Game
     @world.add @tux
     @world.tux = @tux
   
-  initHighscoreOverlay: ->
-    @highscoreOverlay = new HighscoreOverlay @container.find('#highscore'), @world
-    @highscoreOverlay.update()
+  initOverlays: ->
+    @overlays =
+      highscore: new HighscoreOverlay @container.find('#highscore'), @world
+      lives:     new LivesOverlay     @container.find('#lives'), @world
+      
+
+    overlay.update() for name, overlay of @overlays
   
-  getHighscoreOverlay: ->
-    @highscoreOverlay
+  getOverlay: (name) ->
+    @overlays[name]
   
   changeNickname: (newNick) ->
     @networkManager.changeNickname newNick
@@ -72,7 +77,7 @@ module.exports = class Game
       @initWorld 'level1.json'
       @initNetworkManager()
       @initTux()
-      @initHighscoreOverlay()
+      @initOverlays()
     
       @stage.onFrame @world.loop
       @stage.start()
@@ -81,7 +86,7 @@ module.exports = class Game
     @gameOver = true
     @stage.stop()
     @networkManager.stop()
-    @highscoreOverlay.dispose()
+    overlay.dispose?() for name, overlay of @overlays
     
     $(window).off 'keydown keyup'
     
