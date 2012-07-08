@@ -45,6 +45,9 @@ module.exports = class Game
   
   initNetworkManager: ->
     @networkManager = new NetworkManager @world, @keys
+  
+  getNetworkManager: ->
+    @networkManager
     
   initTux: ->
     @tux = new Tux @world, {}, @keys

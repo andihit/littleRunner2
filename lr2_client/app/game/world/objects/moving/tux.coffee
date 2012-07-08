@@ -24,25 +24,39 @@ module.exports = class Tux extends PhysicsObject
     @setWidth 46
     @setHeight 66
     @_direction 'right'
-    @score = 0
-    @lives = 2
+    @score = config.score or 0
+    @lives = config.lives or 2
   
+  isMainPlayer: ->
+    @ == @world.tux
+  
+  getScore: ->
+    @score
+    
   setScore: (score) ->
     @score = score
     @world.getGame().getHighscore().update()
     
-  getScore: ->
-    @score
+  getLives: ->
+    @lives
   
+  setLives: (lives) ->
+    @lives = lives
+    
+    if @isMainPlayer()
+      console.log 'update lives icons'
+    
   lostLive: ->
     if @lives > 0
-      @lives--
+      @setLives @lives - 1
       
       @setX 100
       @setY 100
-      @world.getViewport().reset()
-      @world.updateViewport()
-    else
+      
+      if @isMainPlayer()
+        @world.getViewport().reset()
+        @world.updateViewport()
+    else if @isMainPlayer()
       @world.getGame().gameOver()
       
   jumping: (frame) ->
@@ -126,7 +140,7 @@ module.exports = class Tux extends PhysicsObject
     
   # events
   crashed: (who) ->
-    if who instanceof Fireball and @world.tux == @
+    if who instanceof Fireball
       @lostLive()
     else
       @setScore @score + 1

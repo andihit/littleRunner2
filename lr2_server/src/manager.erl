@@ -37,7 +37,7 @@ new_client(Clients, Pid) ->
 	
 	%% register new player to others
 	send_to_others(Clients, Pid, helper:json_encode([newPlayer, {struct,
-																 [{<<"id">>, PlayerId}, {<<"score">>, 0}]
+																 [{<<"id">>, PlayerId}]
 																}])),
 
 	PlayerId.

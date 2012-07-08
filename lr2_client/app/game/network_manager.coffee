@@ -73,13 +73,14 @@ module.exports = class NetworkManager
   
   newPlayer: (player) ->
     """
-    {id: 'PlayerID', x: 0, y: 0, score: 0}
+    # score, lives optional
+    {id: 'PlayerID', x: 0, y: 0, score: 0, lives: 0}
     """
-    playerTux = new Tux @world, player, new Keys()
-    playerTux.setAlpha .6
-    playerTux.setScore player.score
-    @world.add playerTux
-    playerTux.drawLayer()
+    player = new Tux @world, player, new Keys()
+    player.setAlpha .6
+    
+    @world.add player
+    player.drawLayer()
   
   requestState: ->
     state =
@@ -98,6 +99,7 @@ module.exports = class NetworkManager
         x: player.getX()
         y: player.getY()
         score: player.getScore()
+        lives: player.getLives()
 
     @ws.send JSON.stringify ['state', state]
     
@@ -108,7 +110,7 @@ module.exports = class NetworkManager
         {id: 'MovingObjectID', x: 0, y: 0}
       ],
       players: [
-        {id: 'PlayerID', x: 0, y: 0, score: 0}
+        {id: 'PlayerID', x: 0, y: 0, score: 0, lives: 0}
       ]
     }
     """
@@ -125,6 +127,7 @@ module.exports = class NetworkManager
         existingPlayer[0].setX player.x
         existingPlayer[0].setY player.y
         existingPlayer[0].setScore player.score
+        existingPlayer[0].setLives player.lives
         
   keyChange: (data) ->
     """
