@@ -17,7 +17,7 @@ request_state(AllClients, ExcludeClient) ->
 	
 	%% if there are clients, send the first a state request
 	if
-		Clients /= [] ->
+		length(Clients) > 0 ->
 			[FirstPid|_] = Clients,
 			FirstPid ! helper:json_encode([requestState]);
 		true -> ok
@@ -37,7 +37,7 @@ loop(WaitingClients) ->
 			loop(WaitingClients);
 		{wantState, Pid, Clients} ->
 			if
-				WaitingClients == [] -> request_state(Clients, Pid);
+				length(WaitingClients) == 0 -> request_state(Clients, Pid);
 				true -> ok
 			end,
 			loop(WaitingClients ++ [Pid]);

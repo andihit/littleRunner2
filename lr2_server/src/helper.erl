@@ -1,6 +1,6 @@
 -module(helper).
 
--export([destruct/1, json_encode/1, json_decode/1, find_key/2]).
+-export([destruct/1, json_encode/1, json_decode/1, dict_find_key/2, dict_values/1]).
 
 
 %% @doc Flatten {struct, [term()]} to [term()] recursively.
@@ -21,6 +21,13 @@ json_decode(Json) ->
 	mochijson2:decode(Json).
 
 %% @doc dict: find key by value
-find_key(Value, Dict) ->
+dict_find_key(Value, Dict) ->
 	{Key, _Value} = lists:keyfind(Value, 2, dict:to_list(Dict)),
 	Key.
+
+dict_values({_K, V}) ->
+	V;
+dict_values([H|T]) ->
+	[dict_values(H)|T];
+dict_values(Dict) ->
+	dict_values(dict:to_list(Dict)).

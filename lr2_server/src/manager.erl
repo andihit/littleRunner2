@@ -21,12 +21,17 @@ send_to_others(AllClients, ExcludeClient, Msg) ->
 	lists:foreach(SendFun, Clients).
 
 
-generate_guest_id() ->
+generate_guest_id(TakenIds) ->
 	RandomNumber = list_to_binary(integer_to_list(random:uniform(99) + 1)),
-	<< "Guest", RandomNumber/binary >>.
+	RandomId = << "Guest", RandomNumber/binary >>,
+
+	case lists:member(RandomId, TakenIds) of
+		true -> generate_guest_id(TakenIds);
+		false -> RandomId
+	end.
 
 new_client(Clients, Pid) ->
-	PlayerId = generate_guest_id(),
+	PlayerId = generate_guest_id(helper:dict_values(Clients)),
 	lager:info("New client ~p with ID: ~p", [Pid, PlayerId]),
 	
 	Pid ! helper:json_encode([id, PlayerId]),
