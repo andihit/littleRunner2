@@ -25,7 +25,7 @@ module.exports = class NetworkManager
   connectionLost: =>
     @isOnline = false
     
-    unless @world.getGame().stopped?
+    unless @world.getGame().gameOver?
       @world.getGame().getHighscore().setOffline()
       
 

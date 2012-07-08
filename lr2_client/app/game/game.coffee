@@ -74,14 +74,13 @@ module.exports = class Game
       @stage.onFrame @world.loop
       @stage.start()
   
-  stop: (reason) ->
-    @stopped = true
+  gameOver: ->
+    @gameOver = true
     @stage.stop()
     @networkManager.stop()
     @highscore.dispose()
     
     $(window).off 'keydown keyup'
     
-    @container.find('#gameOver #reason').text reason
     @container.find('#canvasContainer').css 'opacity', '.4'
     @container.find('#gameOver').css 'display', 'block'

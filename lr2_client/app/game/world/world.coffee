@@ -17,6 +17,9 @@ module.exports = class World
   getGame: ->
     @game
 
+  getViewport: ->
+    @viewport
+    
   getLayer: (go) ->
     if go instanceof StickyObject
       @stickyObjects
@@ -61,7 +64,7 @@ module.exports = class World
   
   gameEnded: ->
     if @tux.getTop() - @viewport.height > 200
-      @game.stop 'Tux is gone.'
+      @tux.lostLive()
       
   loop: (frame) =>
     player?.loop frame       for player       in @playerObjects.getChildren()

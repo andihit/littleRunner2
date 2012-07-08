@@ -25,6 +25,7 @@ dict_find_key(Value, Dict) ->
 	{Key, _Value} = lists:keyfind(Value, 2, dict:to_list(Dict)),
 	Key.
 
+%% @doc dict: get all values as list
 dict_values({_K, V}) ->
 	V;
 dict_values([]) ->

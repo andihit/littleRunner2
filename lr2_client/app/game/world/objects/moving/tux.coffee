@@ -25,6 +25,7 @@ module.exports = class Tux extends PhysicsObject
     @setHeight 66
     @_direction 'right'
     @score = 0
+    @lives = 2
   
   setScore: (score) ->
     @score = score
@@ -32,7 +33,18 @@ module.exports = class Tux extends PhysicsObject
     
   getScore: ->
     @score
-    
+  
+  lostLive: ->
+    if @lives > 0
+      @lives--
+      
+      @setX 100
+      @setY 100
+      @world.getViewport().reset()
+      @world.updateViewport()
+    else
+      @world.getGame().gameOver()
+      
   jumping: (frame) ->
     JUMPING_DISTANCE = 180
     moveHeight = 0.7 * frame.timeDiff
@@ -115,6 +127,6 @@ module.exports = class Tux extends PhysicsObject
   # events
   crashed: (who) ->
     if who instanceof Fireball and @world.tux == @
-      @world.getGame().stop 'Run into a fireball.'
+      @lostLive()
     else
       @setScore @score + 1
