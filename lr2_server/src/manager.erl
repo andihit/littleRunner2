@@ -1,23 +1,14 @@
 -module(manager).
 
--export([start/0, loop/1]).
+-export([start_link/0, loop/1]).
 
 
 %% ===================================================================
 %% Application callbacks
 %% ===================================================================
 
-start() ->
-	%% {Host, list({Path, Handler, Opts})}
-    Dispatch = [{'_', [
-        {'_', lr2_handler, []}
-    ]}],
-    %% Name, NbAcceptors, Transport, TransOpts, Protocol, ProtoOpts
-    cowboy:start_listener(ami_ws_dispatcher, 100,
-        cowboy_tcp_transport, [{port, 4444}],
-        cowboy_http_protocol, [{dispatch, Dispatch}]
-    ),
-	register(manager, spawn(?MODULE, loop, [dict:new()])).
+start_link() ->
+	register(manager, spawn_link(?MODULE, loop, [dict:new()])).
 
 
 send_to_others(Clients, Pid, Msg) ->

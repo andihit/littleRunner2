@@ -10,7 +10,18 @@
 %% ===================================================================
 
 start(_StartType, _StartArgs) ->
-	manager:start(),
+	%% {Host, list({Path, Handler, Opts})}
+    Dispatch = [{'_', [
+        {'_', lr2_handler, []}
+    ]}],
+    %% Name, NbAcceptors, Transport, TransOpts, Protocol, ProtoOpts
+    cowboy:start_listener(ami_ws_dispatcher, 100,
+        cowboy_tcp_transport, [{port, 4444}],
+        cowboy_http_protocol, [{dispatch, Dispatch}]
+    ),
+	
+	manager:start_link(),
+	
     lr2_server_sup:start_link().
 
 stop(_State) ->

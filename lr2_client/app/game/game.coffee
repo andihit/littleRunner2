@@ -53,6 +53,7 @@ module.exports = class Game
   
   initHighscore: ->
     @highscore = new Highscore @container.find('#highscore'), @world
+    @highscore.update()
   
   getHighscore: ->
     @highscore

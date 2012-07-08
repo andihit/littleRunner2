@@ -72,6 +72,7 @@ module.exports = class NetworkManager
     {id: 'PlayerID', x: 0, y: 0, score: 0}
     """
     playerTux = new Tux @world, player, new Keys()
+    playerTux.setAlpha .6
     playerTux.setScore player.score
     @world.add playerTux
     playerTux.drawLayer()
@@ -118,7 +119,6 @@ module.exports = class NetworkManager
     """
     {id: 'PlayerID', down: true, keyCode: 65}
     """
-    console.log data
     playerKeys = @world.playerObjects.get('#' + data.id)[0].keys
     if data.down
       playerKeys.keyDown data.keyCode
@@ -127,10 +127,10 @@ module.exports = class NetworkManager
   
   nickChange: (data) ->
     [oldNick, newNick] = data
+    
     player = @world.playerObjects.get('#' + oldNick)[0]
-    console.log oldNick, newNick, player
     player.setId newNick
-    console.log player.getId()
+    
     @world.getGame().getHighscore().update()
     
   lostPlayer: (playerId) ->
