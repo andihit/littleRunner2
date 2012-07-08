@@ -1,10 +1,3 @@
-KEYMAP =
-  Left: [65, 37]
-  Right: [68, 39]
-  Jump: [87, 38]
-  Shoot: [32]
-  FastRun: [17]
-
 module.exports = class Keys
   
   constructor: ->
@@ -34,3 +27,10 @@ module.exports = class Keys
       if pressedKey in keys
         return true
     false
+
+KEYMAP =
+  Left: [65, 37]
+  Right: [68, 39]
+  Jump: [87, 38]
+  Shoot: [32]
+  FastRun: [17]

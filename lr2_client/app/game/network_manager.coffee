@@ -1,5 +1,5 @@
 Tux = require './world/objects/moving/tux'
-Keys = require './keys'
+Keys = require './ui/keys'
 
 module.exports = class NetworkManager
   

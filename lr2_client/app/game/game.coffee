@@ -3,8 +3,8 @@ World = require './world/world'
 LevelManager = require './level_manager'
 NetworkManager = require './network_manager'
 Tux = require './world/objects/moving/tux'
-HighscoreOverlay = require './highscore_overlay'
-Keys = require './keys'
+HighscoreOverlay = require './ui/highscore_overlay'
+Keys = require './ui/keys'
 
 module.exports = class Game
   

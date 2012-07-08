@@ -2,7 +2,6 @@ StickyObject = require './base/sticky_object'
 MovingObject = require './base/moving_object'
 Tux = require './objects/moving/tux'
 Viewport = require './viewport'
-Keys = require 'game/keys'
 
 module.exports = class World
   
