@@ -4,7 +4,7 @@ utils = require 'game/utils'
 
 module.exports = class Tux extends PhysicsObject
   
-  _(@prototype).extend Kinetic.Sprite.prototype
+  @extend Kinetic.Sprite
   
   constructor: (@world, config, @keys) ->
     super

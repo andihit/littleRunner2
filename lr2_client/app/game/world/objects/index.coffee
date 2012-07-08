@@ -5,3 +5,4 @@ module.exports =
   Brick: require './sticky/brick'
   Pipe: require './sticky/pipe'
   Tree: require './sticky/tree'
+  Star: require './sticky/star'

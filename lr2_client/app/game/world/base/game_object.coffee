@@ -1,6 +1,12 @@
 module.exports = class GameObject
   decoration: false
   
+  @extend = (KineticClass) ->
+    src = KineticClass.prototype
+    
+    for prop of src when prop != 'constructor'
+      @prototype[prop] = src[prop]
+  
   constructor: (@world, config) ->
     @width = 0
     @height = 0

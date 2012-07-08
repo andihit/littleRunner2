@@ -5,7 +5,7 @@ VELOCTIY = 0.4
 
 module.exports = class Fireball extends MovingObject
   
-  _(@prototype).extend Kinetic.Image.prototype
+  @extend Kinetic.Image
   
   constructor: (@world, config) ->
     super

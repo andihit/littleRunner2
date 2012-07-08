@@ -3,7 +3,7 @@ utils = require 'game/utils'
 
 module.exports = class Pipe extends StickyObject
   
-  _(@prototype).extend Kinetic.Group.prototype
+  @extend Kinetic.Group
   
   constructor: (@world, config) ->
     super
