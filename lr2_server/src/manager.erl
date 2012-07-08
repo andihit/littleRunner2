@@ -30,12 +30,12 @@ send_to_others(Clients, Pid, Msg) ->
 	lists:foreach(F, dict:fetch_keys(Clients)).
 
 
-generate_unique_id() ->
-	{_MegaSecs, _Secs, MicroSecs} = now(),
-	MicroSecs.
+generate_guest_id() ->
+	RandomNumber = list_to_binary(integer_to_list(random:uniform(99) + 1)),
+	<< "Guest", RandomNumber/binary >>.
 
 new_client(Clients, Pid) ->
-	PlayerId = generate_unique_id(),
+	PlayerId = generate_guest_id(),
 	lager:info("New client ~p with ID: ~p", [Pid, PlayerId]),
 	Pid ! helper:json_encode([id, PlayerId]),
 	
@@ -50,7 +50,7 @@ new_client(Clients, Pid) ->
 	
 	%% register new player to others
 	send_to_others(Clients, Pid, helper:json_encode([newPlayer, {struct,
-																 [{<<"id">>, PlayerId}]
+																 [{<<"id">>, PlayerId}, {<<"score">>, 0}]
 																}])),
 
 	PlayerId.
@@ -63,10 +63,17 @@ handle_message(Clients, Pid, Json) ->
 		<< "state" >> ->
 			[PlayerId, State] = Data,
 			PlayerPid = helper:find_key(PlayerId, Clients),
-			PlayerPid ! helper:json_encode([state, State]);
+			PlayerPid ! helper:json_encode([state, State]),
+			NewClients = Clients;
 		<< "keyChange" >> ->
-			send_to_others(Clients, Pid, Json)
-	end.
+			send_to_others(Clients, Pid, Json),
+			NewClients = Clients;
+		<< "nickChange" >> ->
+			[_OldNick,NewNick] = Data,
+			NewClients = dict:store(Pid, NewNick, Clients),
+			send_to_others(NewClients, Pid, Json)
+	end,
+	NewClients.
 
 loop(Clients) ->
 	lager:info("Current Clients: ~p", [dict:to_list(Clients)]),
@@ -76,8 +83,8 @@ loop(Clients) ->
 			PlayerId = new_client(Clients, Pid),
 			loop(dict:store(Pid, PlayerId, Clients));
 		{message, Pid, Msg} ->
-			handle_message(Clients, Pid, Msg),
-			loop(Clients);
+			NewClients = handle_message(Clients, Pid, Msg),
+			loop(NewClients);
 		{lostclient, Pid} ->
 			lager:info("Lost client ~p", [Pid]),
 			PlayerPid = dict:fetch(Pid, Clients),
