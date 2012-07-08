@@ -125,8 +125,7 @@ module.exports = class NetworkManager
         existingPlayer[0].setX player.x
         existingPlayer[0].setY player.y
         existingPlayer[0].setScore player.score
-      
-    
+        
   keyChange: (data) ->
     """
     {id: 'PlayerID', down: true, keyCode: 65}
@@ -147,7 +146,9 @@ module.exports = class NetworkManager
     
   lostPlayer: (playerId) ->
     player = @world.playerObjects.get '#' + playerId
-    @world.playerObjects.remove player[0]
+    @world.remove player[0]
+    
+    @world.getGame().getHighscore().update()
     
   stop: ->
     @ws.close()
