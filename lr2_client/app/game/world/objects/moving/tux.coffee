@@ -9,10 +9,11 @@ module.exports = class Tux extends PhysicsObject
   
   constructor: (@world, config, @keys) ->
     super
+    
     Kinetic.Sprite.call @,
       id: config.id or 'You',
-      x: config.x or 100,
-      y: config.y or 100,
+      x: config.x or 150,
+      y: config.y or 80,
       image: @world.getGame().getResource('images/game/tux.png'),
       animation: 'standing',
       animations:

@@ -41,30 +41,36 @@ module.exports = class World
     @game.getStage().setOffset -@viewport.x, -@viewport.y
     layer.draw() for layer in @getAllLayers()
   
+  @X_SCROLLING = 150
+  @Y_SCROLLING = 80
   sideScrolling: ->
     # tux side scrolling
-    if @tux.getLeft() + @viewport.x < 100
-      @viewport.x = 100 - @tux.getLeft()
+    if @tux.getLeft() + @viewport.x < World.X_SCROLLING
+      @viewport.x = World.X_SCROLLING - @tux.getLeft()
       @updateViewport()
     
-    if @tux.getRight() + @viewport.x > @viewport.width - 100
-      @viewport.x = @viewport.width - 100 - @tux.getRight()
+    if @tux.getRight() + @viewport.x > @viewport.width - World.X_SCROLLING
+      @viewport.x = @viewport.width - World.X_SCROLLING - @tux.getRight()
       @updateViewport()
       
-    if @tux.getTop() + @viewport.y < 100 or @viewport.y > 0
-      @viewport.y = 100 - @tux.getTop()
-      @viewport.y = 0 if @tux.getTop() > 100
+    if @tux.getTop() + @viewport.y < World.Y_SCROLLING or @viewport.y > 0
+      @viewport.y = World.Y_SCROLLING - @tux.getTop()
+      @viewport.y = 0 if @tux.getTop() > World.Y_SCROLLING
       @updateViewport()
       
-    if @tux.getBottom() + @viewport.y > @viewport.height - 100 or @viewport.y < 0
-      @viewport.y = @viewport.height - 100 - @tux.getBottom()
-      @viewport.y = 0 if @viewport.height - @tux.getBottom() > 100
+    if @tux.getBottom() + @viewport.y > @viewport.height - World.Y_SCROLLING or @viewport.y < 0
+      @viewport.y = @viewport.height - World.Y_SCROLLING - @tux.getBottom()
+      @viewport.y = 0 if @viewport.height - @tux.getBottom() > World.Y_SCROLLING
       @updateViewport()
   
   gameEnded: ->
     if @tux.getTop() - @viewport.height > 200
       @tux.lostLive()
-      
+  
+  #
+  # movingObject can be deleted while traversing loop
+  # same for collectionHitCheck
+  #
   loop: (frame) =>
     player?.loop frame       for player       in @playerObjects.getChildren()
     movingObject?.loop frame for movingObject in @movingObjects.getChildren()
@@ -86,7 +92,7 @@ module.exports = class World
           
     collectionHitCheck = (layer) ->
       for go in layer.getChildren()
-        if go != checkerObject and intersect(go)
+        if go? and go != checkerObject and intersect(go)
           checkerObject.crashed go
           go.crashed checkerObject
           

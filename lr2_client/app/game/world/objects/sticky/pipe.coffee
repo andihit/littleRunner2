@@ -12,13 +12,13 @@ module.exports = class Pipe extends StickyObject
       y: config.y
     
     @setWidth SPRITES[0].width
-    @setHeight (config.count + 1) * SPRITES[0].height
+    @setHeight (config.blocks + 1) * SPRITES[0].height
 
-    for i in [0 .. @config.count]
+    for i in [0 .. config.blocks]
       sprite = if i == 0 then 'top' else 'piece'
-      @add @createImage img, 0, i * SPRITES[0].height, sprite
+      @add @createImage 0, i * SPRITES[0].height, sprite
 
-  createImage: (img, x, y, sprite) ->
+  createImage: (x, y, sprite) ->
     sprite = NAMED_SPRITES[sprite]
     
     image = new Kinetic.Image
