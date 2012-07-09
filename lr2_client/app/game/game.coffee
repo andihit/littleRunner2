@@ -59,8 +59,7 @@ module.exports = class Game
     @overlays =
       highscore: new HighscoreOverlay @container.find('#highscore'), @world
       lives:     new LivesOverlay     @container.find('#lives'), @world
-      
-
+    
     overlay.update() for name, overlay of @overlays
   
   getOverlay: (name) ->
@@ -68,7 +67,7 @@ module.exports = class Game
   
   changeNickname: (newNick) ->
     @networkManager.changeNickname newNick
-    
+  
   start: ->
     @initStage @container.find '#canvasContainer'
     @initKeyEvents()
@@ -78,12 +77,12 @@ module.exports = class Game
       @initNetworkManager()
       @initTux()
       @initOverlays()
-    
+      
       @stage.onFrame @world.loop
       @stage.start()
   
   gameOver: ->
-    @gameOver = true
+    @isGameOver = true
     @stage.stop()
     @networkManager.stop()
     overlay.dispose?() for name, overlay of @overlays
