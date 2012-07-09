@@ -77,7 +77,7 @@ module.exports = class World
     @sideScrolling()
     @gameEnded()
 
-  isHit: (x, y, width, height, checkerObject) ->
+  isHit: (x, y, width, height, checkerObject, sendEvents = true) ->
     top = y
     left = x
     bottom = top + height
@@ -92,9 +92,10 @@ module.exports = class World
     collectionHitCheck = (layer) ->
       for go in layer.getChildren()
         if go? and go != checkerObject and intersect(go)
-          checkerObject.crashed go
-          go.crashed checkerObject
-          
+          if sendEvents
+            checkerObject.crashed go
+            go.crashed checkerObject
+            
           return go unless go.decoration
       null
     

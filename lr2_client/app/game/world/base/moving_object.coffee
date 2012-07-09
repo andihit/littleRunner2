@@ -6,10 +6,12 @@ module.exports = class MovingObject extends GameObject
     diff = Math.round(diff)
     success = true
     
-    isCrash = => @world.isHit @getLeft() + diff, @getTop(), @getWidth(), @getHeight(), @
+    isCrash = (sendEvents = true) =>
+      @world.isHit @getLeft() + diff, @getTop(), @getWidth(), @getHeight(), @, sendEvents
+      
     if hitObject = isCrash()
       diffTest = if diff > 0 then -1 else 1
-      diff += diffTest while isCrash()
+      diff += diffTest while isCrash(false)
       success = false
       
     @setX @getLeft() + diff
@@ -20,10 +22,12 @@ module.exports = class MovingObject extends GameObject
     diff = Math.round(diff)
     success = true
     
-    isCrash = => @world.isHit @getLeft(), @getTop() + diff, @getWidth(), @getHeight(), @
+    isCrash = (sendEvents = true) =>
+      @world.isHit @getLeft(), @getTop() + diff, @getWidth(), @getHeight(), @, sendEvents
+      
     if hitObject = isCrash()
       diffTest = if diff > 0 then -1 else 1
-      diff += diffTest while isCrash()
+      diff += diffTest while isCrash(false)
       success = false
       
     @setY @getTop() + diff

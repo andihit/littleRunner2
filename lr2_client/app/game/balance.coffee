@@ -1,3 +1,6 @@
+# Balance File
+# Speed in px/ms
+# Distance in px
 
 exports.World =
   Scrolling:
@@ -14,5 +17,13 @@ exports.Player =
     Speed: 700 / 1000
     Distance: 180
     
+  Falling:
+    Speed: 700 / 1000
+    
 exports.Fireball =
   Throttling: 500 # throw one every .5 s
+  Speed: 400 / 1000
+  FlyHorizDistance: 200
+  FlyTopDownDistance: 30
+  MaxDistance: 1000
+  

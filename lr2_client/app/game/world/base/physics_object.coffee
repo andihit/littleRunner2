@@ -1,4 +1,5 @@
 MovingObject = require './moving_object'
+Balance = require 'game/balance'
 
 module.exports = class PhysicsObject extends MovingObject
     
@@ -7,7 +8,7 @@ module.exports = class PhysicsObject extends MovingObject
     
     isFalling = not @world.isHit @getLeft(), @getTop() + 1, @getWidth(), @getHeight(), @
     if isFalling
-      @moveY 0.7 * frame.timeDiff
+      @moveY Balance.Player.Falling.Speed * frame.timeDiff
       
     isFalling
 
