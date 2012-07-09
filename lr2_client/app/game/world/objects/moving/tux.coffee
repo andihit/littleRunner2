@@ -1,6 +1,7 @@
 PhysicsObject = require 'game/world/base/physics_object'
 Fireball = require './fireball'
 Star = require '../sticky/star'
+Balance = require 'game/balance'
 utils = require 'game/utils'
 
 module.exports = class Tux extends PhysicsObject
@@ -12,8 +13,8 @@ module.exports = class Tux extends PhysicsObject
     
     Kinetic.Sprite.call @,
       id: config.id or 'You',
-      x: config.x or 150,
-      y: config.y or 80,
+      x: config.x or Balance.World.Scrolling.X,
+      y: config.y or Balance.World.Scrolling.Y,
       image: @world.getGame().getResource('images/game/tux.png'),
       animation: 'standing',
       animations:
@@ -52,8 +53,8 @@ module.exports = class Tux extends PhysicsObject
     if @lives > 0
       @setLives @lives - 1
       
-      @setX 100
-      @setY 100
+      @setX Balance.World.Scrolling.X
+      @setY Balance.World.Scrolling.Y
       
       if @isMainPlayer()
         @world.getViewport().reset()
@@ -62,12 +63,11 @@ module.exports = class Tux extends PhysicsObject
       @world.getGame().gameOver()
       
   jumping: (frame) ->
-    JUMPING_DISTANCE = 180
-    moveHeight = 0.7 * frame.timeDiff
+    moveHeight = Balance.Player.Jump.Speed * frame.timeDiff
       
     if @jumpingToTop
-      if @jumpingDistance + moveHeight > JUMPING_DISTANCE
-        moveHeight = JUMPING_DISTANCE - @jumpingDistance
+      if @jumpingDistance + moveHeight > Balance.Player.Jump.Distance
+        moveHeight = Balance.Player.Jump.Distance - @jumpingDistance
         @jumpingToTop = false
         @jumpingDistance = 0
       else
@@ -77,8 +77,8 @@ module.exports = class Tux extends PhysicsObject
         @jumpingToTop = false
         @jumpingDistance = 0
     else
-      if @jumpingDistance + moveHeight > JUMPING_DISTANCE
-        moveHeight = JUMPING_DISTANCE - @jumpingDistance
+      if @jumpingDistance + moveHeight > Balance.Player.Jump.Distance
+        moveHeight = Balance.Player.Jump.Distance - @jumpingDistance
         @isJumping = false
       else
         @jumpingDistance += moveHeight
@@ -87,7 +87,7 @@ module.exports = class Tux extends PhysicsObject
         @isJumping = false
   
   throwFireball: ->
-    return if new Date().getTime() - @lastFire < 500
+    return if new Date().getTime() - @lastFire < Balance.Fireball.Throttling
     
     @lastFire = new Date().getTime()
     # when firing left, X = 20px away + fireball width
@@ -119,8 +119,12 @@ module.exports = class Tux extends PhysicsObject
       
   loop: (frame) ->
     super
-    moveDiff = => if @keys.isPressed('FastRun') then 0.5 else 0.25
-      
+    moveDiff = =>
+      if @keys.isPressed('FastRun')
+        Balance.Player.Move.Fast
+      else
+        Balance.Player.Move.Normal
+    
     if @keys.isPressed 'Left'
       @moveX -moveDiff() * frame.timeDiff
       @_direction 'left'

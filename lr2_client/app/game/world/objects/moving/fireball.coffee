@@ -52,5 +52,8 @@ module.exports = class Fireball extends MovingObject
       @remove()
       
   remove: ->
+    return if @removed
+    @removed = true
+    
     @world.remove @
     @drawLayer()

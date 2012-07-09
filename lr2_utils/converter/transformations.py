@@ -11,7 +11,7 @@ class Transformations:
     def getXY(cls, go):
         return {
             'x': int(go.find('Left/value').text),
-            'y': int(go.find('Top/value').text)
+            'y': int(go.find('Top/value').text) - 50
         }
         
     @classmethod

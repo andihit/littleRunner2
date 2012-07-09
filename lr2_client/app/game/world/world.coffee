@@ -2,6 +2,7 @@ StickyObject = require './base/sticky_object'
 MovingObject = require './base/moving_object'
 Tux = require './objects/moving/tux'
 Viewport = require './viewport'
+Balance = require '../balance'
 
 module.exports = class World
   
@@ -41,26 +42,24 @@ module.exports = class World
     @game.getStage().setOffset -@viewport.x, -@viewport.y
     layer.draw() for layer in @getAllLayers()
   
-  @X_SCROLLING = 150
-  @Y_SCROLLING = 80
   sideScrolling: ->
     # tux side scrolling
-    if @tux.getLeft() + @viewport.x < World.X_SCROLLING
-      @viewport.x = World.X_SCROLLING - @tux.getLeft()
+    if @tux.getLeft() + @viewport.x < Balance.World.Scrolling.X
+      @viewport.x = Balance.World.Scrolling.X - @tux.getLeft()
       @updateViewport()
     
-    if @tux.getRight() + @viewport.x > @viewport.width - World.X_SCROLLING
-      @viewport.x = @viewport.width - World.X_SCROLLING - @tux.getRight()
+    if @tux.getRight() + @viewport.x > @viewport.width - Balance.World.Scrolling.X
+      @viewport.x = @viewport.width - Balance.World.Scrolling.X - @tux.getRight()
       @updateViewport()
       
-    if @tux.getTop() + @viewport.y < World.Y_SCROLLING or @viewport.y > 0
-      @viewport.y = World.Y_SCROLLING - @tux.getTop()
-      @viewport.y = 0 if @tux.getTop() > World.Y_SCROLLING
+    if @tux.getTop() + @viewport.y < Balance.World.Scrolling.Y or @viewport.y > 0
+      @viewport.y = Balance.World.Scrolling.Y - @tux.getTop()
+      @viewport.y = 0 if @tux.getTop() > Balance.World.Scrolling.Y
       @updateViewport()
       
-    if @tux.getBottom() + @viewport.y > @viewport.height - World.Y_SCROLLING or @viewport.y < 0
-      @viewport.y = @viewport.height - World.Y_SCROLLING - @tux.getBottom()
-      @viewport.y = 0 if @viewport.height - @tux.getBottom() > World.Y_SCROLLING
+    if @tux.getBottom() + @viewport.y > @viewport.height - Balance.World.Scrolling.Y or @viewport.y < 0
+      @viewport.y = @viewport.height - Balance.World.Scrolling.Y - @tux.getBottom()
+      @viewport.y = 0 if @viewport.height - @tux.getBottom() > Balance.World.Scrolling.Y
       @updateViewport()
   
   gameEnded: ->
