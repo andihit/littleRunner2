@@ -1,11 +1,11 @@
 [
-   ["Floor", {"x": 0,   "y": 400, "count": 20}],
+   ["Floor", {"x": 0,   "y": 400, "blocks": 20}],
    ["Brick", {"x": 600, "y": 100, "color": "brown"}],
    ["Tree", {"x": 400, "y": 200}],
    ["Background", {"name": "green_hills1"}],
-   ["Floor", {"x": 0,   "y": 300, "count":  2}],
-   ["Floor", {"x": 400, "y": 300, "count":  3}],
-   ["Floor", {"x": 500, "y": 200, "count":  3}],
-   ["Floor", {"x": -100, "y": 550, "count":  30}],
+   ["Floor", {"x": 0,   "y": 300, "blocks":  2}],
+   ["Floor", {"x": 400, "y": 300, "blocks":  3}],
+   ["Floor", {"x": 500, "y": 200, "blocks":  3}],
+   ["Floor", {"x": -100, "y": 550, "blocks":  30}],
    ["Star", {"x": 300, "y": 200}]
 ]

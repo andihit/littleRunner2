@@ -11,13 +11,13 @@ module.exports = class Floor extends StickyObject
       x: config.x
       y: config.y
     
-    @setWidth (config.count + 2) * (SPRITES[0].width - 2)
+    @setWidth (config.blocks + 2) * (SPRITES[0].width - 2)
     @setHeight SPRITES[0].height
 
-    for i in [0 .. config.count + 1]
+    for i in [0 .. config.blocks + 1]
       if i == 0
         sprite = 'left'
-      else if i + 1 == config.count + 2
+      else if i + 1 == config.blocks + 2
         sprite = 'right'
       else
         sprite = 'middle'
