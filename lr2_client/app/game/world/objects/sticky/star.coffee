@@ -13,6 +13,7 @@ module.exports = class Star extends StickyImageObject
   sprite: SPRITE
 
   crashed: (who) ->
+    super
     if who instanceof Tux
       who.scored()
       @world.remove @

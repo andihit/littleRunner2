@@ -3,23 +3,22 @@ Fireball = require './fireball'
 Balance = require 'game/balance'
 utils = require 'game/utils'
 
-module.exports = class Tux extends PhysicsObject
+module.exports = class Gumba extends PhysicsObject
   
   @extend Kinetic.Sprite
   
-  constructor: (@world, config, @keys) ->
+  constructor: (@world, config) ->
     super
     
     Kinetic.Sprite.call @,
-      id: config.id or 'You'
-      x: config.x or Balance.World.Scrolling.X
-      y: config.y or Balance.World.Scrolling.Y
-      image: @world.getGame().getResource('images/game/tux.png')
-      animation: 'standing'
+      x: config.x
+      y: config.y
+      image: @world.getGame().getResource('images/game/gumba.png'),
+      animation: 'walking',
       animations:
-        standing: utils.getSpriteSheet 46, 66,  0, 1, 1
-        walking:  utils.getSpriteSheet 46, 66,  0, 5
-      frameRate: 6
+        walking: utils.getSpriteSheet 57, 64,  0, 2
+        down:    [{x: 46*3, y: 0, width: 57, height: 57}]
+      frameRate: 3
       
     @setWidth 46
     @setHeight 66

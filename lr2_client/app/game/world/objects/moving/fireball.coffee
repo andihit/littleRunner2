@@ -11,10 +11,10 @@ module.exports = class Fireball extends MovingObject
     
     img = @world.getGame().getResource('images/game/fireball.png')
     Kinetic.Image.call @,
-      x: config.x,
-      y: config.y,
-      image: img,
-      width: img.width,
+      x: config.x
+      y: config.y
+      image: img
+      width: img.width
       height: img.height
 
     @setWidth img.width
@@ -44,8 +44,9 @@ module.exports = class Fireball extends MovingObject
     @remove() if @distance >= Balance.Fireball.MaxDistance
        
   crashed: (who) ->
+    super
     if who instanceof require './tux'
-      who.lostLive()
+      who.lostHalfLive()
       @remove()
       return
       
