@@ -1,6 +1,5 @@
 PhysicsObject = require 'game/world/base/physics_object'
 Fireball = require './fireball'
-Star = require '../sticky/star'
 Balance = require 'game/balance'
 utils = require 'game/utils'
 
@@ -39,6 +38,9 @@ module.exports = class Tux extends PhysicsObject
   setScore: (score) ->
     @score = score
     @world.getGame().getOverlay('highscore').update()
+  
+  scored: (points = 1) ->
+    @setScore @score + points
     
   getLives: ->
     @lives
@@ -146,9 +148,5 @@ module.exports = class Tux extends PhysicsObject
     
   # events
   crashed: (who) ->
-    if who instanceof Fireball
-      @lostLive()
-    else if who instanceof Star
-      @setScore @score + 1
-      @world.remove who
-      who.drawLayer()
+    super
+    # most crashed events in other GameObjects

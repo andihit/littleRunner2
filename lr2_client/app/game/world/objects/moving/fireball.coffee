@@ -44,6 +44,11 @@ module.exports = class Fireball extends MovingObject
     @remove() if @distance >= Balance.Fireball.MaxDistance
        
   crashed: (who) ->
+    if who instanceof require './tux'
+      who.lostLive()
+      @remove()
+      return
+      
     if who instanceof StickyObject and @stage % 2 != 0 and @stage < 7
       @flyVector[1] = -Balance.Fireball.Speed
       @stage++
