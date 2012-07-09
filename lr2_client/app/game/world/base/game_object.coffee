@@ -12,12 +12,13 @@ module.exports = class GameObject
     @height = 0
   
   getLeft:   -> @getX()
-  getRight:  -> @getX() + @width
+  getRight:  -> @getX() + @getWidth()
   getTop:    -> @getY()
-  getBottom: -> @getY() + @height
+  getBottom: -> @getY() + @getHeight()
+  
+  # get/set width/height could be overritten by Kinetic.Image
   getWidth:  -> @width
   getHeight: -> @height
-  
   setWidth: (width) -> @width = width
   setHeight: (height) -> @height = height
     
@@ -25,8 +26,8 @@ module.exports = class GameObject
     {
       x: @getLeft()
       y: @getTop()
-      width: @width
-      height: @height
+      width: @getWidth()
+      height: @getHeight()
     }
 
   drawLayer: ->

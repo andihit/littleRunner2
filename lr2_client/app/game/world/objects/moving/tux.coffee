@@ -1,5 +1,6 @@
 PhysicsObject = require 'game/world/base/physics_object'
 Fireball = require './fireball'
+Star = require '../sticky/star'
 utils = require 'game/utils'
 
 module.exports = class Tux extends PhysicsObject
@@ -142,5 +143,7 @@ module.exports = class Tux extends PhysicsObject
   crashed: (who) ->
     if who instanceof Fireball
       @lostLive()
-    else
+    else if who instanceof Star
       @setScore @score + 1
+      @world.remove who
+      who.drawLayer()

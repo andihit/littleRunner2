@@ -1,6 +1,6 @@
 [
    ["Floor", {"x": 0,   "y": 400, "count": 20}],
-   ["Brick", {"x": 600, "y": 300, "color": "brown"}],
+   ["Brick", {"x": 600, "y": 100, "color": "brown"}],
    ["Tree", {"x": 400, "y": 200}],
    ["Background", {"name": "green_hills1"}],
    ["Floor", {"x": 0,   "y": 300, "count":  2}],

@@ -8,8 +8,6 @@ module.exports = class MovingObject extends GameObject
     
     isCrash = => @world.isHit @getLeft() + diff, @getTop(), @getWidth(), @getHeight(), @
     if hitObject = isCrash()
-      @.crashed hitObject
-      hitObject.crashed @
       diffTest = if diff > 0 then -1 else 1
       diff += diffTest while isCrash()
       success = false
@@ -24,8 +22,6 @@ module.exports = class MovingObject extends GameObject
     
     isCrash = => @world.isHit @getLeft(), @getTop() + diff, @getWidth(), @getHeight(), @
     if hitObject = isCrash()
-      @.crashed hitObject
-      hitObject.crashed @
       diffTest = if diff > 0 then -1 else 1
       diff += diffTest while isCrash()
       success = false
