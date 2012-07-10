@@ -108,6 +108,12 @@ module.exports = class Tux extends PhysicsObject
       @setAnimation 'walking'
     else if not leftOrRight and @getAnimation() is 'walking'
       @setAnimation 'standing'
+  
+  triggerJumping: ->
+    console.log 'trigger',@
+    @isJumping = true
+    @jumpingDistance = 0
+    @jumpingToTop = true
       
   loop: (frame) ->
     super
@@ -129,9 +135,7 @@ module.exports = class Tux extends PhysicsObject
       @throwFireball()
     
     if @keys.isPressed('Jump') and not @isJumping and not @isFalling # W
-      @isJumping = true
-      @jumpingDistance = 0
-      @jumpingToTop = true
+      @triggerJumping()
     
     @jumping(frame) if @isJumping
     @_changeAnimations()
