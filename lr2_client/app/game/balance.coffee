@@ -33,3 +33,6 @@ exports.Turtle =
     Crazy: 700 / 1000
   DownTime: 5000 # 5s
     
+exports.Gumba =
+  Move: 50 / 1000
+  ReduceHeightInterval: 70

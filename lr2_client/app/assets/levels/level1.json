@@ -230,5 +230,21 @@
             "x": 433, 
             "direction": "right"
         }
+    ], 
+    [
+        "Gumba", 
+        {
+            "y": 216, 
+            "x": 1051, 
+            "direction": "left"
+        }
+    ], 
+    [
+        "Turtle", 
+        {
+            "y": 183, 
+            "x": 1556, 
+            "direction": "right"
+        }
     ]
 ]

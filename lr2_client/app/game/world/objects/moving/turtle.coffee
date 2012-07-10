@@ -9,8 +9,9 @@ TurtleMode =
   DownCrazy: 2
   
 module.exports = class Turtle extends PhysicsObject
-  ImageDirection: 'left'
   @extend Kinetic.Sprite
+  ImageDirection: 'left'
+  StartWhenVisible: true
   
   constructor: (@world, config) ->
     super
@@ -32,7 +33,7 @@ module.exports = class Turtle extends PhysicsObject
     @standUpTimeout = null
 
   loop: (frame) ->
-    super
+    return unless super
     
     moveDiff = =>
       switch @turtleMode

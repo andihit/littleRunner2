@@ -4,8 +4,8 @@ Balance = require 'game/balance'
 utils = require 'game/utils'
 
 module.exports = class Tux extends PhysicsObject
-  ImageDirection: 'right'
   @extend Kinetic.Sprite
+  ImageDirection: 'right'
   
   constructor: (@world, config, @keys) ->
     super

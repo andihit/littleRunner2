@@ -3,7 +3,6 @@ StickyObject = require 'game/world/base/sticky_object'
 Balance = require 'game/balance'
 
 module.exports = class Fireball extends MovingObject
-  
   @extend Kinetic.Image
   
   constructor: (@world, config) ->

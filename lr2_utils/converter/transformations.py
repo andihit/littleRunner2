@@ -51,3 +51,10 @@ class Transformations:
         return {
             'direction': go.find('Direction/value').text.lower()
         }
+        
+    @classmethod
+    @simple
+    def Gumba(cls, go):
+        return {
+            'direction': go.find('Direction/value').text.lower()
+        }

@@ -7,5 +7,6 @@ module.exports =
   
   Spika: require './sticky/spika'
   Turtle: require './moving/turtle'
+  Gumba: require './moving/gumba'
   
   Fireball: require './moving/fireball'

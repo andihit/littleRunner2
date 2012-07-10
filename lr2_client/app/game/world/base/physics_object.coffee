@@ -3,6 +3,9 @@ Balance = require 'game/balance'
 
 module.exports = class PhysicsObject extends MovingObject
   
+  constructor: ->
+    @loopStarted = false
+  
   falling: (frame) ->
     return false if @isJumping
     
@@ -17,13 +20,32 @@ module.exports = class PhysicsObject extends MovingObject
     return if @direction == newDirection
     @direction = newDirection
     
+    return unless @ImageDirection
+    
     if @direction != @ImageDirection
       @setScale -1, 1
       @setOffset @getWidth(), 0
     else
       @setScale 1, 1
       @setOffset 0, 0
-      
+  
+  isInViewport: ->
+    viewport = @world.getViewport()
+
+    seeLeft = -viewport.x
+    seeRight = seeLeft + viewport.width
+    
+    seeRight > @getLeft()
+    
   loop: (frame) ->
     super
-    @isFalling = @falling(frame)
+    
+    if not @loopStarted
+      if not @StartWhenVisible or (@StartWhenVisible and @isInViewport())
+        @loopStarted = true
+        
+    if @loopStarted
+      @isFalling = @falling(frame)
+      true
+    else
+      false
