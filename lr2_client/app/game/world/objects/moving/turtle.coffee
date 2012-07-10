@@ -29,6 +29,7 @@ module.exports = class Turtle extends PhysicsObject
     @setHeight 64
     @changeDirection config.direction
     @turtleMode = TurtleMode.Walking
+    @standUpTimeout = null
 
   loop: (frame) ->
     super
@@ -46,16 +47,29 @@ module.exports = class Turtle extends PhysicsObject
       @moveX -moveDiff() * frame.timeDiff
 
   changeAnimation: (animation) ->
+    return if @getAnimation() == animation
+    
     if animation == 'walking'
-      @setX @getX() - (64 - 57)
+      @setY @getY() - (64 - 57)
       @setWidth 57
       @setHeight 64
     else
       @setWidth 57
       @setHeight 57
-      @setX @getX() + (64 - 57)
+      @setY @getY() + (64 - 57)
       
     @setAnimation animation
+  
+  setTurtleMode: (newMode) ->
+    clearTimeout @standUpTimeout
+    
+    if newMode is TurtleMode.Walking
+      @changeAnimation 'walking'
+    else
+      @changeAnimation 'down'
+      @standUpTimeout = setTimeout (=> @setTurtleMode TurtleMode.Walking), Balance.Turtle.DownTime
+        
+    @turtleMode = newMode
     
   reverseDirection: ->
     @changeDirection utils.reverseDirection @direction
@@ -67,23 +81,16 @@ module.exports = class Turtle extends PhysicsObject
     if who instanceof Tux
       if direction == 'top'
         who.triggerJumping()
-        
         switch @turtleMode
-          when TurtleMode.Walking
-            @changeAnimation 'down'
-            @turtleMode = TurtleMode.Down
-            
-          when TurtleMode.Down
-            @turtleMode = TurtleMode.DownCrazy
-            
-          when TurtleMode.DownCrazy
-            @turtleMode = TurtleMode.Down
+          when TurtleMode.Walking   then @setTurtleMode TurtleMode.Down
+          when TurtleMode.Down      then @setTurtleMode TurtleMode.DownCrazy
+          when TurtleMode.DownCrazy then @setTurtleMode TurtleMode.Down
         
       # if turtle is walking or crazy or direction == bottom
       else if @turtleMode != TurtleMode.Down or direction == 'bottom'
         @reverseDirection()
         who.lostHalfLive()
-      else # turtle is down and left/right
+      else # turtle is down or downCrazy and direction is left/right
         @changeDirection direction
         @turtleMode = TurtleMode.DownCrazy
 

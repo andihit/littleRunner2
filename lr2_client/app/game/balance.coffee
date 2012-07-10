@@ -30,5 +30,6 @@ exports.Fireball =
 exports.Turtle =
   Move:
     Normal: 100 / 1000
-    Crazy: 500 / 1000
+    Crazy: 700 / 1000
+  DownTime: 5000 # 5s
     

@@ -67,7 +67,7 @@ module.exports = class Tux extends PhysicsObject
     
   jumping: (frame) ->
     moveHeight = Balance.Player.Jump.Speed * frame.timeDiff
-      
+    
     if @jumpingToTop
       if @jumpingDistance + moveHeight > Balance.Player.Jump.Distance
         moveHeight = Balance.Player.Jump.Distance - @jumpingDistance
@@ -110,10 +110,10 @@ module.exports = class Tux extends PhysicsObject
       @setAnimation 'standing'
   
   triggerJumping: ->
-    console.log 'trigger',@
-    @isJumping = true
-    @jumpingDistance = 0
-    @jumpingToTop = true
+    _.defer =>
+      @isJumping = true
+      @jumpingDistance = 0
+      @jumpingToTop = true
       
   loop: (frame) ->
     super
