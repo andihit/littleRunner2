@@ -41,6 +41,8 @@ module.exports = class Turtle extends PhysicsObject
   crashed: (who, direction) ->
     super    
     return if who.decoration
-    console.log direction
+    
     if direction == 'left' or direction == 'right'
-      @changeDirection if @direction == 'left' then 'right' else 'left'
+      @changeDirection utils.reverseDirection @direction
+    else
+      console.log direction

@@ -1,5 +1,5 @@
 World = require 'game/world/world'
-Brick = require('game/world/objects').Brick
+GameObjects = require('game/world/objects')
 
 exports.fakeGame = ->
   getStage: ->
@@ -12,8 +12,8 @@ exports.fakeWorld = (game) ->
   new World game
 
 # spawn bricks at X,Y with dimension 42x42
-exports.spawn = (world, x, y) ->
-  new Brick world,
+exports.spawn = (world, ClassName, x, y) ->
+  new GameObjects[ClassName] world,
     x: x
     y: y
     color: 'blue'
