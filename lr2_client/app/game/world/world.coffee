@@ -2,6 +2,7 @@ StickyObject = require './base/sticky_object'
 MovingObject = require './base/moving_object'
 Tux = require './objects/moving/tux'
 Viewport = require './viewport'
+CollisionDetection = require './collision_detection'
 Balance = require '../balance'
 
 module.exports = class World
@@ -77,30 +78,5 @@ module.exports = class World
     @sideScrolling()
     @gameEnded()
 
-  isHit: (x, y, width, height, checkerObject, sendEvents = true) ->
-    top = y
-    left = x
-    bottom = top + height
-    right = left + width
-    
-    intersect = (go) ->
-      go.getLeft() <= right &&
-      go.getTop() <= bottom &&
-      left <= go.getRight() &&
-      top <= go.getBottom()
-          
-    collectionHitCheck = (layer) ->
-      for go in layer.getChildren()
-        if go? and go != checkerObject and intersect(go)
-          if sendEvents
-            checkerObject.crashed go
-            go.crashed checkerObject
-            
-          return go unless go.decoration
-      null
-    
-    for layer in @getAllLayers()
-      if x = collectionHitCheck layer
-        return x
-        
-    null
+  isHit: (params...) ->
+    CollisionDetection.check @, params...

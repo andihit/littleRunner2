@@ -44,3 +44,10 @@ class Transformations:
     def DesignElements(cls, go):
         if go.find('Element/value').text == 'Tree':
             return ['Tree', Transformations.getXY(go)]
+        
+    @classmethod
+    @simple
+    def Turtle(cls, go):
+        return {
+            'direction': go.find('Direction/value').text.lower()
+        }

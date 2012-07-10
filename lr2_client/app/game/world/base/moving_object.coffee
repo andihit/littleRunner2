@@ -7,7 +7,7 @@ module.exports = class MovingObject extends GameObject
     success = true
     
     isCrash = (sendEvents = true) =>
-      @world.isHit @getLeft() + diff, @getTop(), @getWidth(), @getHeight(), @, sendEvents
+      @world.isHit [@getLeft() + diff, @getTop(), @getWidth(), @getHeight()], @, sendEvents
       
     if hitObject = isCrash()
       diffTest = if diff > 0 then -1 else 1
@@ -23,7 +23,7 @@ module.exports = class MovingObject extends GameObject
     success = true
     
     isCrash = (sendEvents = true) =>
-      @world.isHit @getLeft(), @getTop() + diff, @getWidth(), @getHeight(), @, sendEvents
+      @world.isHit [@getLeft(), @getTop() + diff, @getWidth(), @getHeight()], @, sendEvents
       
     if hitObject = isCrash()
       diffTest = if diff > 0 then -1 else 1
@@ -33,3 +33,5 @@ module.exports = class MovingObject extends GameObject
     @setY @getTop() + diff
     @getLayer().draw()
     success
+
+  loop: (frame) ->

@@ -7,6 +7,8 @@ IMAGES = [
   'images/game/fireball.png'
   'images/game/star.png'
   'images/game/spika.png'
+  'images/game/gumba.png'
+  'images/game/turtle.png'
 ]
 FILES = [
   'levels/level1.json'

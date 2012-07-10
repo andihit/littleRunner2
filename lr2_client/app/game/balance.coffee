@@ -27,3 +27,8 @@ exports.Fireball =
   FlyTopDownDistance: 30
   MaxDistance: 1000
   
+exports.Turtle =
+  Move:
+    Normal: 100 / 1000
+    Crazy: 500 / 1000
+    

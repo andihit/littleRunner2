@@ -6,5 +6,6 @@ module.exports =
   Star: require './sticky/star'
   
   Spika: require './sticky/spika'
+  Turtle: require './moving/turtle'
   
   Fireball: require './moving/fireball'

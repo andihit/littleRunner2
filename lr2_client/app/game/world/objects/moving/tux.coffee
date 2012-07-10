@@ -4,7 +4,7 @@ Balance = require 'game/balance'
 utils = require 'game/utils'
 
 module.exports = class Tux extends PhysicsObject
-  
+  ImageDirection: 'right'
   @extend Kinetic.Sprite
   
   constructor: (@world, config, @keys) ->
@@ -23,7 +23,7 @@ module.exports = class Tux extends PhysicsObject
       
     @setWidth 46
     @setHeight 66
-    @_direction 'right'
+    @changeDirection 'right'
     @score = config.score or 0
     @lives = config.lives or 2
   
@@ -101,17 +101,6 @@ module.exports = class Tux extends PhysicsObject
     @world.add fireball
     fireball.drawLayer()
   
-  _direction: (newDirection) ->
-    return if @direction == newDirection
-    @direction = newDirection
-    
-    if @direction == 'left'
-      @setScale -1, 1
-      @setOffset @width, 0
-    else
-      @setScale 1, 1
-      @setOffset 0, 0
-  
   _changeAnimations: ->
     leftOrRight = @keys.isPressed('Left') or @keys.isPressed('Right')
     
@@ -130,11 +119,11 @@ module.exports = class Tux extends PhysicsObject
     
     if @keys.isPressed 'Left'
       @moveX -moveDiff() * frame.timeDiff
-      @_direction 'left'
+      @changeDirection 'left'
       
-    if @keys.isPressed 'Right'
+    else if @keys.isPressed 'Right'
       @moveX moveDiff() * frame.timeDiff
-      @_direction 'right'
+      @changeDirection 'right'
       
     if @keys.isPressed 'Shoot'
       @throwFireball()
