@@ -1,4 +1,5 @@
 # Balance File
+#
 # Speed in px/ms
 # Distance in px
 
@@ -7,7 +8,6 @@ exports.World =
     X: 180
     Y: 80
 
-# speed in px/ms
 exports.Player =
   Move:
     Normal: 350 / 1000

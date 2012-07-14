@@ -115,7 +115,7 @@ module.exports = class NetworkManager
     }
     """
     for position in state.movingObjects
-      go = @world.movingObjects.get('#' + position.id)
+      go = @world.movingObjects.get('#' + position.id)[0]
       go.setX position.x
       go.setY position.y
       
