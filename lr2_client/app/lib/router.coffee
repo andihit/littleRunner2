@@ -10,8 +10,5 @@ module.exports = class Router extends Backbone.Router
     $('#contentContainer').html application.gameView.el
     application.gameView.start()
     
-  about: ->
-    $('#contentContainer').html require 'views/templates/about'
-    
   imprint: ->
     $('#contentContainer').html require 'views/templates/imprint'
