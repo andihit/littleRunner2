@@ -3,7 +3,15 @@ application = require 'application'
 module.exports = class Router extends Backbone.Router
   routes:
     '': 'game'
+    'about': 'about'
+    'imprint': 'imprint'
 
   game: ->
-    $('body').html application.gameView.el
+    $('#contentContainer').html application.gameView.el
     application.gameView.start()
+    
+  about: ->
+    $('#contentContainer').html require 'views/templates/about'
+    
+  imprint: ->
+    $('#contentContainer').html require 'views/templates/imprint'
