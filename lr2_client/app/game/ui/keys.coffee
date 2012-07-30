@@ -29,8 +29,8 @@ module.exports = class Keys
     false
 
 KEYMAP =
-  Left: [65, 37]
-  Right: [68, 39]
-  Jump: [87, 38]
+  Left: [65, 37, 'tiltLeft']
+  Right: [68, 39, 'tiltRight']
+  Jump: [87, 38, 'touch']
   Shoot: [32]
   FastRun: [17]

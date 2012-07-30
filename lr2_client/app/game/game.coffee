@@ -32,6 +32,21 @@ module.exports = class Game
     $(window).on 'keyup', (e) =>
       @keys.keyUp e.keyCode
     
+    # mobile devices
+    @stage.on 'tap', =>
+      @keys.keyDown 'touch'
+      _.defer => @keys.keyUp 'touch'
+      
+    window.addEventListener 'devicemotion', (e) =>
+      y = e.accelerationIncludingGravity.y
+      
+      if y < -2 # go right
+        @keys.keyUp 'tiltLeft'
+        @keys.keyDown 'tiltRight'
+      else if y > 2 # go left
+        @keys.keyUp 'tiltRight'
+        @keys.keyDown 'tiltLeft'
+    
   initResources: (done) ->
     @resources = new Resources
     @resources.load done
