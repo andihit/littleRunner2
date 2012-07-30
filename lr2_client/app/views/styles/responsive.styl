@@ -1,0 +1,16 @@
+@media (max-device-width: 480px)
+  $gamewidth = 480px
+  $gameheight = 268px
+  
+  #container
+    width: $gamewidth
+    height: $gameheight
+    margin-left: -(@width / 2)
+    margin-top: -(@height / 2)
+  
+  #container #contentContainer
+    min-height: $gameheight
+    
+  #game-view
+    width: $gamewidth
+    height: $gameheight
