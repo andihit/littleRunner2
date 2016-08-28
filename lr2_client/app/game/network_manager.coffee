@@ -2,12 +2,12 @@ Tux = require './world/objects/moving/tux'
 Keys = require './ui/keys'
 
 module.exports = class NetworkManager
-  
+
   constructor: (@world, localKeys) ->
     localKeys.listener = @
-    
+
     @isOnline = false
-    @initWebsocket 'ws://localhost:4444'
+    @initWebsocket 'wss://localhost:4444'
 
   initWebsocket: (host) ->
     @ws = new WebSocket host
@@ -15,24 +15,24 @@ module.exports = class NetworkManager
     @ws.onmessage = @handleMessage
     @ws.onerror = (error) -> console.log 'WebSocket error:',error
     @ws.onclose = @connectionLost
-    
+
   handleMessage: (msg) =>
     [type, data] = JSON.parse msg.data
-    
+
     if type in ['id', 'newPlayer', 'requestState', 'state', 'keyChange', 'nickChange', 'lostPlayer']
       @[type](data)
-    
+
   connectionLost: =>
     @isOnline = false
-    
+
     unless @world.getGame().isGameOver?
       @world.getGame().getOverlay('highscore').setOffline()
-      
+
 
   # local payer
   keyDown: (keyCode) ->
     return unless @isOnline
-    
+
     @ws.send JSON.stringify [
       'keyChange', {
         id: @world.tux.getId()
@@ -40,10 +40,10 @@ module.exports = class NetworkManager
         keyCode: keyCode
       }
     ]
-    
+
   keyUp: (keyCode) ->
     return unless @isOnline
-    
+
     @ws.send JSON.stringify [
       'keyChange', {
         id: @world.tux.getId()
@@ -51,26 +51,26 @@ module.exports = class NetworkManager
         keyCode: keyCode
       }
     ]
-    
+
   changeNickname: (newNick) ->
     if @world.playerObjects.get('#' + newNick).length > 0
       return false
-    
+
     oldNick = @world.tux.getId()
     @world.tux.setId newNick
-    
+
     if @isOnline
       @ws.send JSON.stringify [
         'nickChange', [oldNick, newNick]
       ]
     true
-  
-  
+
+
   # remote messages
   id: (id) ->
     @world.tux.setId id
     @world.getGame().getOverlay('highscore').update()
-  
+
   newPlayer: (player) ->
     """
     # score, lives optional
@@ -78,21 +78,21 @@ module.exports = class NetworkManager
     """
     player = new Tux @world, player, new Keys()
     player.setAlpha .6
-    
+
     @world.add player
     player.drawLayer()
-  
+
   requestState: ->
     state =
       movingObjects: []
       players: []
-      
+
     for movingObject in @world.movingObjects.getChildren() when movingObject.getId()?
       state.movingObjects.push
         id: movingObject.getId()
         x: movingObject.getX()
         y: movingObject.getY()
-    
+
     for player in @world.playerObjects.getChildren()
       state.players.push
         id: player.getId()
@@ -102,7 +102,7 @@ module.exports = class NetworkManager
         lives: player.getLives()
 
     @ws.send JSON.stringify ['state', state]
-    
+
   state: (state) ->
     """
     {
@@ -118,7 +118,7 @@ module.exports = class NetworkManager
       go = @world.movingObjects.get('#' + position.id)[0]
       go.setX position.x
       go.setY position.y
-      
+
     for player in state.players when player.id != @world.tux.getId()
       existingPlayer = @world.playerObjects.get '#' + player.id
       if existingPlayer.length == 0
@@ -128,7 +128,7 @@ module.exports = class NetworkManager
         existingPlayer[0].setY player.y
         existingPlayer[0].setScore player.score
         existingPlayer[0].setLives player.lives
-        
+
   keyChange: (data) ->
     """
     {id: 'PlayerID', down: true, keyCode: 65}
@@ -138,20 +138,20 @@ module.exports = class NetworkManager
       playerKeys.keyDown data.keyCode
     else
       playerKeys.keyUp data.keyCode
-  
+
   nickChange: (data) ->
     [oldNick, newNick] = data
-    
+
     player = @world.playerObjects.get('#' + oldNick)[0]
     player.setId newNick
-    
+
     @world.getGame().getOverlay('highscore').update()
-    
+
   lostPlayer: (playerId) ->
     player = @world.playerObjects.get '#' + playerId
     @world.remove player[0]
-    
+
     @world.getGame().getOverlay('highscore').update()
-    
+
   stop: ->
     @ws.close()
