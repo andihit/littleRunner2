@@ -9,8 +9,4 @@ RUN npm install -g brunch
 COPY . /web/littleRunner2
 WORKDIR /web/littleRunner2
 
-RUN npm install && brunch build
-VOLUME /web/littleRunner2/public
-VOLUME /web/littleRunner2/apache
-
-CMD echo Successfully built littleRunner2.
+CMD npm install && brunch build
