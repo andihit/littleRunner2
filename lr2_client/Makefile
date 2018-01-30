@@ -13,7 +13,7 @@ build: public
 
 .PHONY: deploy
 deploy: build
-	rsync -rlpt --delete --progress public/ root@lemon:$(DEPLOY_DIR)
+	rsync -rlpt --delete --progress public/ root@$(HOST):$(DEPLOY_DIR)
 
 .PHONY: clean
 clean:
